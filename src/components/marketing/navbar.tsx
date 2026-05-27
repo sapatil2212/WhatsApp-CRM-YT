@@ -1,23 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bot, ChevronDown, Menu, X, Sparkles, Sun, Moon } from "lucide-react";
+import { Bot, ChevronDown, Menu, X, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useMarketingTheme } from "@/components/marketing/marketing-theme-provider";
 import { ThemeToggle } from "./theme-toggle";
 import { MagneticButton } from "./magnetic-button";
 import { cn } from "@/lib/utils";
 
+function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+function clamp01(v: number) { return Math.min(1, Math.max(0, v)); }
+const SCROLL_RANGE = 120;
+
 export function GlassNavbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { resolvedTheme } = useMarketingTheme();
   const isLight = resolvedTheme === "light";
   const supabase = createClient();
+  const rafRef = useRef<number | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -26,21 +33,33 @@ export function GlassNavbar() {
     };
     checkUser();
 
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setProgress(clamp01(window.scrollY / SCROLL_RANGE));
+      });
     };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
-    window.addEventListener("scroll", handleScroll);
+    const onClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("mousedown", onClickOutside);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [supabase]);
 
   const navLinks = [
+    { name: "Home", href: "/" },
     { name: "Features", href: "/features" },
     { name: "AI Automation", href: "/ai-automation" },
     { name: "Pricing", href: "/pricing" },
-    { name: "API Docs", href: "/api-docs" },
   ];
 
   const dropdownLinks = [
@@ -56,172 +75,178 @@ export function GlassNavbar() {
     { name: "Blog Hacks", href: "/blog" },
   ];
 
-  return (
-    <header
-      className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300 px-4 sm:px-6 py-4",
-        hasScrolled
-          ? isLight
-            ? "bg-white/80 backdrop-blur-md border-b border-slate-200/60 py-3 shadow-[0_2px_15px_rgba(0,0,0,0.02)]"
-            : "bg-slate-950/70 backdrop-blur-md border-b border-slate-900/80 py-3"
-          : "bg-transparent"
-      )}
-    >
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/50 transition-all duration-300">
-            <Bot className="size-4 group-hover:scale-110 transition-transform" />
-          </div>
-          <span
-            className={cn(
-              "text-base font-extrabold tracking-tight flex items-center gap-1.5 font-sans transition-colors",
-              isLight ? "text-slate-950" : "text-white"
-            )}
-          >
-            wacrm <Sparkles className="size-3 text-emerald-400 animate-pulse" />
-          </span>
-        </Link>
+  const maxWidth    = lerp(1152, 920,  progress);
+  const radius      = lerp(14,   9999, progress);
+  const padV        = lerp(6,    10,   progress);
+  const padH        = lerp(8,    22,   progress);
+  const bgAlpha     = lerp(0, isLight ? 0.92 : 0.85, progress);
+  const borderAlpha = lerp(0, isLight ? 0.65 : 0.55, progress);
+  const shadowAlpha = lerp(0, isLight ? 0.07 : 0.50, progress);
+  const shadowBlur  = lerp(0, 28, progress);
+  const topPx       = lerp(16, 12, progress);
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
+  const pillStyle: React.CSSProperties = {
+    width: "100%",
+    maxWidth: `${maxWidth}px`,
+    borderRadius: `${radius}px`,
+    padding: `${padV}px ${padH}px`,
+    backgroundColor: isLight
+      ? `rgba(255,255,255,${bgAlpha})`
+      : `rgba(2,6,23,${bgAlpha})`,
+    border: `1px solid ${
+      isLight
+        ? `rgba(203,213,225,${borderAlpha})`
+        : `rgba(30,41,59,${borderAlpha})`
+    }`,
+    boxShadow: `0 4px ${shadowBlur}px rgba(0,0,0,${shadowAlpha})`,
+    backdropFilter: progress > 0.05 ? "blur(20px)" : "none",
+    WebkitBackdropFilter: progress > 0.05 ? "blur(20px)" : "none",
+  };
+
+  const linkCls = "text-[var(--m-text-secondary)] hover:text-[var(--m-text-heading)]";
+
+  return (
+    <>
+      <header
+        className="fixed inset-x-0 z-50 flex justify-center pointer-events-none px-4 sm:px-6"
+        style={{ top: `${topPx}px` }}
+      >
+        <div
+          className="pointer-events-auto flex items-center justify-between"
+          style={pillStyle}
+        >
+          {/* Brand */}
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/60 transition-all duration-300">
+              <Bot className="size-3.5 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="text-sm font-extrabold tracking-tight flex items-center gap-1 text-[var(--m-text-heading)]">
+              wacrm <Sparkles className="size-2.5 text-emerald-400 animate-pulse" />
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-xs font-semibold tracking-wide transition-colors duration-200",
-                  isActive
-                    ? "text-emerald-500"
-                    : isLight
-                    ? "text-slate-600 hover:text-slate-950"
-                    : "text-slate-400 hover:text-white"
+                  "text-[11px] font-semibold tracking-wide transition-colors duration-200 whitespace-nowrap",
+                  pathname === link.href ? "text-emerald-500" : linkCls
                 )}
               >
                 {link.name}
               </Link>
-            );
-          })}
+            ))}
 
-          {/* More Dropdown */}
-          <div className="relative group/dropdown">
-            <button
-              className={cn(
-                "flex items-center gap-1 text-xs font-semibold transition-colors cursor-pointer select-none",
-                isLight ? "text-slate-600 hover:text-slate-950" : "text-slate-400 hover:text-white"
-              )}
-            >
-              Explore <ChevronDown className="size-3 transition-transform group-hover/dropdown:rotate-180" />
-            </button>
-            <div
-              className={cn(
-                "absolute top-full right-0 mt-2 w-48 rounded-xl border p-2.5 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300",
-                isLight ? "border-slate-200 bg-white shadow-xl" : "border-slate-800 bg-slate-950 shadow-2xl"
-              )}
-            >
-              <div className="grid grid-cols-1 gap-1">
-                {dropdownLinks.map((link) => {
-                  const isActive = pathname === link.href;
-                  return (
+            {/* Explore dropdown — click-controlled */}
+            <div ref={dropdownRef} className="relative">
+              <button
+                onClick={() => setDropdownOpen((v) => !v)}
+                className={cn(
+                  "flex items-center gap-1 text-[11px] font-semibold transition-colors cursor-pointer select-none whitespace-nowrap",
+                  linkCls
+                )}
+              >
+                Explore
+                <ChevronDown
+                  className={cn(
+                    "size-3 transition-transform duration-200",
+                    dropdownOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {dropdownOpen && (
+                <div
+                  className={cn(
+                    "absolute top-full right-0 mt-3 w-52 rounded-2xl border p-2 z-50",
+                    "animate-in fade-in slide-in-from-top-2 duration-150",
+                    isLight
+                      ? "border-slate-200 bg-white shadow-xl shadow-black/5"
+                      : "border-slate-800 bg-slate-950 shadow-2xl shadow-black/50"
+                  )}
+                >
+                  {dropdownLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
+                      onClick={() => setDropdownOpen(false)}
                       className={cn(
-                        "text-[11px] font-semibold px-2 py-1.5 rounded-lg transition-colors",
-                        isActive
+                        "block text-[11px] font-semibold px-3 py-1.5 rounded-xl transition-colors",
+                        pathname === link.href
                           ? "text-emerald-500 bg-emerald-500/5"
-                          : isLight
-                          ? "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
-                          : "text-slate-400 hover:bg-slate-900 hover:text-white"
+                          : "text-[var(--m-text-secondary)] hover:bg-[var(--m-bg-tertiary)] hover:text-[var(--m-text-heading)]"
                       )}
                     >
                       {link.name}
                     </Link>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        </nav>
+          </nav>
 
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* Light / Dark Mode Toggle */}
-          <ThemeToggle />
-
-          <Link
-            href="/book-demo"
-            className={cn(
-              "text-xs font-semibold transition-colors px-3 py-1.5 duration-205",
-              isLight ? "text-slate-600 hover:text-slate-950" : "text-slate-400 hover:text-white"
-            )}
-          >
-            Book Demo
-          </Link>
-          <MagneticButton>
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center gap-2.5 shrink-0">
+            <ThemeToggle />
             <Link
-              href={isLoggedIn ? "/dashboard" : "/login"}
-              className="text-xs font-semibold bg-[#00DF82] hover:bg-[#00c673] text-slate-950 px-4 py-2 rounded-lg transition-all shadow-[0_2px_12px_rgba(0,223,130,0.15)]"
+              href="/book-demo"
+              className={cn("text-[11px] font-semibold transition-colors px-3 py-1.5 whitespace-nowrap", linkCls)}
             >
-              {isLoggedIn ? "Dashboard" : "Sign In"}
+              Book Demo
             </Link>
-          </MagneticButton>
+            <MagneticButton>
+              <Link
+                href={isLoggedIn ? "/dashboard" : "/login"}
+                className="text-[11px] font-semibold bg-[#00DF82] hover:bg-[#00c673] text-slate-950 px-4 py-1.5 rounded-full transition-all shadow-[0_2px_12px_rgba(0,223,130,0.2)] whitespace-nowrap"
+              >
+                {isLoggedIn ? "Dashboard" : "Sign In"}
+              </Link>
+            </MagneticButton>
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setIsOpen((v) => !v)}
+            className="md:hidden w-8 h-8 rounded-full border flex items-center justify-center transition-colors bg-[var(--m-bg-secondary)] border-[var(--m-border-primary)] text-[var(--m-text-secondary)] hover:text-[var(--m-text-heading)]"
+          >
+            {isOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+          </button>
         </div>
+      </header>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={cn(
-            "md:hidden w-8 h-8 rounded-lg border flex items-center justify-center cursor-pointer transition-colors",
-            isLight
-              ? "bg-slate-100 border-slate-200 text-slate-600"
-              : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
-          )}
-        >
-          {isOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-        </button>
-      </div>
-
-      {/* Mobile Drawer */}
+      {/* Mobile drawer */}
       {isOpen && (
-        <div
-          className={cn(
-            "md:hidden fixed inset-0 top-[60px] z-40 p-6 flex flex-col justify-between transition-colors duration-300",
-            isLight ? "bg-white/95 border-t border-slate-100 backdrop-blur-lg" : "bg-slate-950/95 border-t border-slate-900/60 backdrop-blur-lg"
-          )}
-        >
+        <div className="fixed inset-0 top-[68px] z-40 p-6 flex flex-col justify-between md:hidden bg-[var(--m-bg-secondary)] border-t border-[var(--m-border-primary)] backdrop-blur-xl">
           <div className="space-y-6">
             <div className="flex flex-col gap-4">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Navigation</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--m-text-muted)]">
+                Navigation
+              </span>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "text-sm font-bold transition-colors",
-                    isLight ? "text-slate-800 hover:text-slate-950" : "text-slate-200 hover:text-emerald-400"
-                  )}
+                  className="text-sm font-bold transition-colors text-[var(--m-text-primary)] hover:text-emerald-500"
                 >
                   {link.name}
                 </Link>
               ))}
             </div>
-
             <div className="flex flex-col gap-3">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Solutions</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--m-text-muted)]">
+                Solutions
+              </span>
               <div className="grid grid-cols-2 gap-3">
                 {dropdownLinks.slice(0, 6).map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={cn(
-                      "text-xs font-semibold transition-colors",
-                      isLight ? "text-slate-600 hover:text-slate-950" : "text-slate-400 hover:text-emerald-400"
-                    )}
+                    className="text-xs font-semibold transition-colors text-[var(--m-text-secondary)] hover:text-emerald-500"
                   >
                     {link.name}
                   </Link>
@@ -229,33 +254,27 @@ export function GlassNavbar() {
               </div>
             </div>
           </div>
-
           <div className="flex flex-col gap-3 mt-8">
-            {/* Mobile theme toggle */}
-            <div className="flex justify-center py-1 z-10 relative">
+            <div className="flex justify-center py-1">
               <ThemeToggle className="w-full justify-around" />
             </div>
-
             <Link
               href="/book-demo"
               onClick={() => setIsOpen(false)}
-              className={cn(
-                "w-full text-center text-xs font-bold py-3 rounded-lg border transition-colors",
-                isLight ? "bg-slate-50 border-slate-200 text-slate-800" : "bg-slate-900 border-slate-800 text-slate-200"
-              )}
+              className="w-full text-center text-xs font-bold py-3 rounded-full border transition-colors border-[var(--m-border-primary)] bg-[var(--m-bg-tertiary)] text-[var(--m-text-primary)]"
             >
               Book Demo
             </Link>
             <Link
               href={isLoggedIn ? "/dashboard" : "/login"}
               onClick={() => setIsOpen(false)}
-              className="w-full text-center text-xs font-semibold bg-[#00DF82] text-slate-950 py-3 rounded-lg hover:bg-[#00c673]"
+              className="w-full text-center text-xs font-semibold bg-[#00DF82] text-slate-950 py-3 rounded-full hover:bg-[#00c673] transition-colors"
             >
               {isLoggedIn ? "Dashboard" : "Sign In"}
             </Link>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

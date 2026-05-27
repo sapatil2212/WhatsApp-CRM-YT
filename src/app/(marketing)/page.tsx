@@ -19,11 +19,11 @@ export default function HomePage() {
   return (
     <div className="w-full flex flex-col overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-start pt-56 md:pt-60 pb-16 px-4 md:px-6 overflow-hidden">
+      <section className="relative w-full min-h-[88vh] flex flex-col items-center justify-start pt-24 md:pt-32 pb-0 px-4 md:px-6 overflow-hidden">
         {/* Exact Staggered Grid Background from Reference Image */}
         <ReferenceGrid gridSize={85} />
         
-        <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 pt-4">
+        <div className="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10 pt-4">
           {/* Tagline Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -78,12 +78,12 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {/* Dashboard Mockup - Reduced Vertical Distance (mt-0) */}
+        {/* Dashboard Mockup */}
         <motion.div
           initial={{ opacity: 0, y: 55 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-full max-w-4xl mt-0 mx-auto relative z-10"
+          className="w-full max-w-6xl mt-10 mx-auto relative z-10"
         >
           <ReferenceDashboard />
         </motion.div>
@@ -100,7 +100,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. AI CHAT EXPERIENCE STORY */}
-      <section className="py-20 px-4 md:px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
+      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wide">
             <Bot className="size-4" /> Autonomous Auto-Responder
@@ -157,7 +157,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. WORKFLOW AUTOMATION BUILDER */}
-      <section className="py-20 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
+      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 uppercase tracking-wide">
             <Zap className="size-4" /> Trigger Workflows
@@ -177,7 +177,7 @@ export default function HomePage() {
       </section>
 
       {/* 6. CRM BOARD SHOWCASE */}
-      <section className="py-20 px-4 md:px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
         <div className="lg:col-span-2 relative">
           <div className="absolute inset-0 bg-indigo-500/5 blur-[100px] pointer-events-none" />
           <CRMPreviewBoard />
@@ -205,7 +205,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. DETAILED FEATURE CARDS (HANDCRAFTED) */}
-      <section className="py-20 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
+      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--m-text-heading)] transition-colors duration-300">
             Handcrafted for Growth.
@@ -252,7 +252,7 @@ export default function HomePage() {
       </section>
 
       {/* 8. GIANT CTA SECTION */}
-      <section className="py-24 px-4 md:px-6 relative text-center max-w-4xl mx-auto border-t border-[var(--m-border-primary)] transition-colors duration-300">
+      <section className="py-24 px-4 md:px-6 relative text-center max-w-6xl mx-auto border-t border-[var(--m-border-primary)] transition-colors duration-300">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[350px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
 
         <div className="space-y-6 relative z-10">

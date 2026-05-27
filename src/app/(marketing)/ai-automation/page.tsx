@@ -15,9 +15,9 @@ export default function AIAutomationPage() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-16 space-y-24">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 space-y-20">
       {/* Hero Header */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/25 bg-[var(--m-badge-bg)] text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
             <Bot className="size-3.5" /> AI Chat Agents

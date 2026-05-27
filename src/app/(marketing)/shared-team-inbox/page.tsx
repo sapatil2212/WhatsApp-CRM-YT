@@ -8,9 +8,9 @@ export default function SharedInboxPage() {
   const [activeTab, setActiveTab] = useState<"collision" | "notes">("collision");
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-16 space-y-24">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 space-y-20">
       {/* Header */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-500/25 bg-cyan-950/20 text-cyan-400 text-[10px] font-bold uppercase tracking-wider">
             <Inbox className="size-3.5" /> Collaboration Control

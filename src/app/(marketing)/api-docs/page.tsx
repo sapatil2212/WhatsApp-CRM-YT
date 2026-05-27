@@ -45,7 +45,7 @@ client.messages.send_template(
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
       {/* Documentation Info column */}
       <div className="space-y-6">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-purple-500/25 bg-purple-950/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">

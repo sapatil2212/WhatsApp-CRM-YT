@@ -38,9 +38,9 @@ export function SpotlightCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "relative rounded-xl border border-[var(--m-border-glass)] bg-[var(--m-bg-glass)] backdrop-blur-md overflow-hidden transition-all duration-300",
+        "relative rounded-xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] backdrop-blur-md overflow-hidden transition-all duration-300",
         interactive &&
-          "hover:border-[var(--m-border-secondary)] hover:bg-[var(--m-bg-secondary)] hover:shadow-2xl hover:shadow-[var(--m-shadow-card)]",
+          "hover:border-[var(--m-border-secondary)] hover:shadow-lg",
         className
       )}
       {...props}
@@ -68,7 +68,7 @@ export function SpotlightCard({
       )}
 
       {/* Card Content wrapper to force stacking order above spotlight */}
-      <div className="relative z-10 w-full h-full flex flex-col">
+      <div className="relative z-10 w-full h-full flex flex-col p-5">
         {children}
       </div>
     </div>

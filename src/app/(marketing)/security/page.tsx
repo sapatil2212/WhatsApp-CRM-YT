@@ -24,7 +24,7 @@ export default function SecurityPage() {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-16 space-y-20">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 space-y-20">
       {/* Header */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/25 bg-[var(--m-badge-bg)] text-emerald-500 text-[10px] font-bold uppercase tracking-wider">

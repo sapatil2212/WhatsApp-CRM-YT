@@ -417,18 +417,6 @@ html[data-mtheme="light"][data-theme] {
   --sidebar-accent-foreground: #0f172a;
   --sidebar-ring: var(--primary);
 
-  /* Override Tailwind slate colors globally under Light Mode so hardcoded slate components transform immediately! */
-  --color-slate-50: #0f172a;
-  --color-slate-100: #1e293b;
-  --color-slate-200: #334155;
-  --color-slate-300: #475569;
-  --color-slate-400: #64748b;
-  --color-slate-500: #94a3b8;
-  --color-slate-600: #cbd5e1;
-  --color-slate-700: #cbd5e1; /* light grey border */
-  --color-slate-800: #e2e8f0; /* beautiful light divider border */
-  --color-slate-900: #ffffff; /* pure white card background! */
-  --color-slate-950: #f8fafc; /* clean slate white background! */
 }
 
 /* Force hardcoded dark backgrounds to adapt gracefully in Light Mode */
@@ -441,9 +429,17 @@ html[data-mtheme="light"] .bg-slate-950\/50,
 html[data-mtheme="light"] .bg-slate-950\/60,
 html[data-mtheme="light"] .bg-slate-950\/70,
 html[data-mtheme="light"] .bg-slate-950\/80,
-html[data-mtheme="light"] .bg-slate-950\/90,
-html[data-mtheme="light"] .bg-[url('/inbox-doodle.svg')] {
+html[data-mtheme="light"] .bg-slate-950\/90 {
   background-color: #f8fafc !important;
+}
+
+html[data-mtheme="light"] .inbox-doodle-bg {
+  background-color: #f8fafc !important;
+  background-image: url('/inbox-doodle.svg');
+}
+
+.inbox-doodle-bg {
+  background-image: url('/inbox-doodle.svg');
 }
 
 html[data-mtheme="light"] .bg-slate-900,
@@ -499,7 +495,37 @@ html[data-mtheme="light"] [data-state="active"] .text-white {
   color: #ffffff !important;
 }
 
-/* Apply smooth color transition globally under both theme systems */
+/* ── Marketing page: ensure section text is readable in light mode ── */
+
+/* Navbar transparent state — text must be dark on light bg */
+html[data-mtheme="light"] header .text-slate-400 {
+  color: #475569 !important;
+}
+html[data-mtheme="light"] header .text-slate-600 {
+  color: #334155 !important;
+}
+
+/* SpotlightCard and feature cards — add visible border + bg in light */
+html[data-mtheme="light"] .border-\[var\(--m-border-glass\)\] {
+  border-color: #e2e8f0 !important;
+}
+
+/* Workflow visualizer terminal panel */
+html[data-mtheme="light"] .bg-\[var\(--m-bg-primary\)\]\/60 {
+  background-color: rgba(248,250,252,0.8) !important;
+}
+
+/* Preserve colored accent text — never override emerald/cyan/purple/amber/pink */
+html[data-mtheme="light"] .text-emerald-400,
+html[data-mtheme="light"] .text-emerald-500,
+html[data-mtheme="light"] .text-cyan-400,
+html[data-mtheme="light"] .text-purple-400,
+html[data-mtheme="light"] .text-amber-400,
+html[data-mtheme="light"] .text-pink-400,
+html[data-mtheme="light"] .text-blue-400 {
+  /* keep their own color — do not override */
+  color: revert;
+}
 [data-mtheme], [data-theme] {
   transition: var(--m-transition);
 }
