@@ -328,17 +328,17 @@ function TriggerCard({
     // Card width: full on mobile, fixed 320px on sm+. The canvas wrapper
     // (max-w-2xl + px-4) keeps this tidy on tablet/desktop.
     <div className="z-10 w-full max-w-[320px] sm:w-80">
-      <div className="rounded-lg border border-slate-800 border-l-4 border-l-blue-500 bg-slate-900 shadow-lg">
+      <div className="rounded-lg border border-slate-800 border-l-4 border-l-teal-500 bg-slate-900 shadow-lg">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           className="flex w-full items-center gap-3 px-4 py-3 text-left"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-500/10 text-blue-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-teal-500/10 text-teal-400">
             <Zap className="h-4 w-4" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[11px] uppercase tracking-wide text-blue-300">Trigger</div>
+            <div className="text-[11px] uppercase tracking-wide text-teal-300">Trigger</div>
             <div className="truncate text-sm font-medium text-white">
               {TRIGGER_OPTIONS.find((o) => o.value === type)?.label ?? type}
             </div>

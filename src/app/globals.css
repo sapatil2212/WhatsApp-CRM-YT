@@ -95,44 +95,6 @@
  * ============================================================ */
 
 :root,
-html[data-theme="violet"] {
-  --background: oklch(0.13 0.01 260);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0.01 260);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.18 0.01 260);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.526 0.247 293);
-  --primary-foreground: oklch(0.985 0 0);
-  --primary-hover: oklch(0.6 0.22 293);
-  --primary-soft: oklch(0.526 0.247 293 / 0.12);
-  --primary-soft-2: oklch(0.526 0.247 293 / 0.2);
-  --secondary: oklch(0.22 0.01 260);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.65 0.01 260);
-  --accent: oklch(0.22 0.01 260);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.28 0.01 260);
-  --input: oklch(0.28 0.01 260);
-  --ring: oklch(0.526 0.247 293);
-  --chart-1: oklch(0.526 0.247 293);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.16 0.01 260);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.526 0.247 293);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.22 0.01 260);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.28 0.01 260);
-  --sidebar-ring: oklch(0.526 0.247 293);
-}
-
 html[data-theme="emerald"] {
   --background: oklch(0.135 0.01 200);
   --foreground: oklch(0.985 0 0);
@@ -160,6 +122,7 @@ html[data-theme="emerald"] {
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
   --sidebar: oklch(0.165 0.01 200);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.62 0.16 162);
@@ -168,6 +131,43 @@ html[data-theme="emerald"] {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.285 0.01 200);
   --sidebar-ring: oklch(0.62 0.16 162);
+}
+
+html[data-theme="violet"] {
+  --background: oklch(0.13 0.01 260);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.18 0.01 260);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.18 0.01 260);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.526 0.247 293);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-hover: oklch(0.6 0.22 293);
+  --primary-soft: oklch(0.526 0.247 293 / 0.12);
+  --primary-soft-2: oklch(0.526 0.247 293 / 0.2);
+  --secondary: oklch(0.22 0.01 260);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.22 0.01 260);
+  --muted-foreground: oklch(0.65 0.01 260);
+  --accent: oklch(0.22 0.01 260);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.28 0.01 260);
+  --input: oklch(0.28 0.01 260);
+  --ring: oklch(0.526 0.247 293);
+  --chart-1: oklch(0.526 0.247 293);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.16 0.01 260);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.526 0.247 293);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.22 0.01 260);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.28 0.01 260);
+  --sidebar-ring: oklch(0.526 0.247 293);
 }
 
 html[data-theme="cobalt"] {
@@ -335,7 +335,7 @@ html[data-theme="rose"] {
   --m-shadow-glow: 0 0 80px rgba(16,185,129,0.08);
   --m-glow-emerald: rgba(16,185,129,0.10);
   --m-glow-cyan: rgba(6,182,212,0.10);
-  --m-glow-purple: rgba(168,85,247,0.05);
+  --m-glow-purple: rgba(20,184,166,0.05);
   --m-glass-blur: 12px;
   --m-gradient-fade: #020617;
   --m-gradient-mesh-1: rgba(16,185,129,0.05);
@@ -369,7 +369,7 @@ html[data-theme="rose"] {
   --m-shadow-glow: 0 0 60px rgba(16,185,129,0.04);
   --m-glow-emerald: rgba(16,185,129,0.04);
   --m-glow-cyan: rgba(6,182,212,0.03);
-  --m-glow-purple: rgba(168,85,247,0.02);
+  --m-glow-purple: rgba(20,184,166,0.02);
   --m-glass-blur: 16px;
   --m-gradient-fade: #f8fafc;
   --m-gradient-mesh-1: rgba(16,185,129,0.03);
@@ -491,7 +491,18 @@ html[data-mtheme="light"] .bg-primary.text-white,
 html[data-mtheme="light"] button.bg-primary,
 html[data-mtheme="light"] a.bg-primary,
 html[data-mtheme="light"] .text-primary-foreground,
-html[data-mtheme="light"] [data-state="active"] .text-white {
+html[data-mtheme="light"] [data-state="active"] .text-white,
+html[data-mtheme="light"] .bg-teal-600 .text-white,
+html[data-mtheme="light"] .bg-teal-600.text-white,
+html[data-mtheme="light"] .bg-teal-500.text-white,
+html[data-mtheme="light"] .bg-emerald-650 .text-white,
+html[data-mtheme="light"] .bg-emerald-650.text-white,
+html[data-mtheme="light"] .bg-emerald-600 .text-white,
+html[data-mtheme="light"] .bg-emerald-600.text-white,
+html[data-mtheme="light"] .bg-emerald-500.text-white,
+html[data-mtheme="light"] .bg-emerald-500 .text-white,
+html[data-mtheme="light"] .bg-red-500.text-white,
+html[data-mtheme="light"] .bg-red-500 .text-white {
   color: #ffffff !important;
 }
 
@@ -515,16 +526,41 @@ html[data-mtheme="light"] .bg-\[var\(--m-bg-primary\)\]\/60 {
   background-color: rgba(248,250,252,0.8) !important;
 }
 
-/* Preserve colored accent text — never override emerald/cyan/purple/amber/pink */
-html[data-mtheme="light"] .text-emerald-400,
-html[data-mtheme="light"] .text-emerald-500,
-html[data-mtheme="light"] .text-cyan-400,
-html[data-mtheme="light"] .text-purple-400,
-html[data-mtheme="light"] .text-amber-400,
-html[data-mtheme="light"] .text-pink-400,
-html[data-mtheme="light"] .text-blue-400 {
-  /* keep their own color — do not override */
-  color: revert;
+/* Custom status select dropdown styling */
+.status-select-scheduled {
+  color: #059669 !important;
+  background-color: rgba(5, 150, 105, 0.08) !important;
+  border-color: rgba(5, 150, 105, 0.2) !important;
+}
+html[data-mtheme="dark"] .status-select-scheduled,
+html:not([data-mtheme="light"]) .status-select-scheduled {
+  color: #34d399 !important;
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.status-select-completed {
+  color: #0d9488 !important;
+  background-color: rgba(13, 148, 136, 0.08) !important;
+  border-color: rgba(13, 148, 136, 0.2) !important;
+}
+html[data-mtheme="dark"] .status-select-completed,
+html:not([data-mtheme="light"]) .status-select-completed {
+  color: #2dd4bf !important;
+  background-color: rgba(20, 184, 166, 0.08) !important;
+  border-color: rgba(20, 184, 166, 0.2) !important;
+}
+
+.status-select-cancelled {
+  color: #e11d48 !important;
+  background-color: rgba(225, 29, 72, 0.08) !important;
+  border-color: rgba(225, 29, 72, 0.2) !important;
+}
+html[data-mtheme="dark"] .status-select-cancelled,
+html:not([data-mtheme="light"]) .status-select-cancelled {
+  color: #fb7185 !important;
+  background-color: rgba(244, 63, 94, 0.08) !important;
+  border-color: rgba(244, 63, 94, 0.2) !important;
 }
 [data-mtheme], [data-theme] {
   transition: var(--m-transition);
@@ -538,4 +574,193 @@ html[data-mtheme="light"] .text-blue-400 {
 [data-theme] *::after {
   /* Avoid transitioning layout properties to prevent glitches */
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* ── Dashboard light mode: slate-800/700 backgrounds ── */
+html[data-mtheme="light"] .bg-slate-800,
+html[data-mtheme="light"] .bg-slate-800\/60,
+html[data-mtheme="light"] .bg-slate-800\/40,
+html[data-mtheme="light"] .bg-slate-800\/30 {
+  background-color: #f1f5f9 !important;
+}
+
+html[data-mtheme="light"] .bg-slate-700 {
+  background-color: #e2e8f0 !important;
+}
+
+html[data-mtheme="light"] .hover\:bg-slate-800:hover,
+html[data-mtheme="light"] .hover\:bg-slate-800\/60:hover {
+  background-color: #e2e8f0 !important;
+}
+
+html[data-mtheme="light"] .hover\:bg-slate-700:hover {
+  background-color: #cbd5e1 !important;
+}
+
+/* slate-500 text — subtitles, timestamps, muted labels */
+html[data-mtheme="light"] .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Borders */
+html[data-mtheme="light"] .border-slate-800,
+html[data-mtheme="light"] .divide-slate-800 > * + * {
+  border-color: #e2e8f0 !important;
+}
+
+/* Chart SVG fills */
+html[data-mtheme="light"] .fill-slate-500 {
+  fill: #64748b !important;
+}
+html[data-mtheme="light"] .fill-slate-400 {
+  fill: #94a3b8 !important;
+}
+
+/* Activity feed stripe */
+html[data-mtheme="light"] .bg-slate-900\/40 {
+  background-color: #f8fafc !important;
+}
+
+/* Skeleton pulse */
+html[data-mtheme="light"] .bg-slate-800.animate-pulse {
+  background-color: #e2e8f0 !important;
+}
+
+/* Quick actions hover */
+html[data-mtheme="light"] .hover\:border-slate-700:hover {
+  border-color: #cbd5e1 !important;
+}
+
+/* Chart tooltip — scoped to tooltip-role elements only so it does not
+   override the admin-panel shell background which also uses bg-slate-950 */
+html[data-mtheme="light"] [role="tooltip"] .bg-slate-950,
+html[data-mtheme="light"] .chart-tooltip .bg-slate-950 {
+  background-color: #1e293b !important;
+}
+
+/* Range tab active */
+html[data-mtheme="light"] .bg-slate-800\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+/* ── Admin panel: missing opacity-variant overrides ── */
+html[data-mtheme="light"] .border-slate-800\/50 {
+  border-color: #e2e8f0 !important;
+}
+
+html[data-mtheme="light"] .bg-slate-800\/50 {
+  background-color: #f1f5f9 !important;
+}
+
+html[data-mtheme="light"] .hover\:bg-slate-800\/30:hover {
+  background-color: #f1f5f9 !important;
+}
+
+html[data-mtheme="light"] .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Preserve white text on primary-colored hover buttons */
+html[data-mtheme="light"] .bg-violet-600 .hover\:text-white:hover,
+html[data-mtheme="light"] .bg-violet-600.hover\:text-white:hover,
+html[data-mtheme="light"] .bg-teal-600 .hover\:text-white:hover,
+html[data-mtheme="light"] .bg-teal-600.hover\:text-white:hover,
+html[data-mtheme="light"] .bg-emerald-600 .hover\:text-white:hover,
+html[data-mtheme="light"] .bg-emerald-600.hover\:text-white:hover,
+html[data-mtheme="light"] .bg-primary .hover\:text-white:hover {
+  color: #ffffff !important;
+}
+
+/* ============================================================
+ * THEME-RESPONSIVE FORM FIELD OVERRIDES
+ *
+ * Ensures all native HTML fields (select, options, date/time, textareas)
+ * are perfectly readable with proper contrast in both Light and Dark modes.
+ * ============================================================ */
+
+/* Ensure native dropdown select and option fields are fully readable */
+html[data-mtheme="light"] select {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+html[data-mtheme="light"] option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html[data-mtheme="dark"] select,
+html:not([data-mtheme="light"]) select {
+  background-color: #090d16;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+html[data-mtheme="dark"] option,
+html:not([data-mtheme="light"]) option {
+  background-color: #090d16 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure native date and time picker fields are readable with appropriate indicators */
+html[data-mtheme="light"] input[type="date"],
+html[data-mtheme="light"] input[type="time"],
+html[data-mtheme="light"] input[type="datetime-local"] {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+html[data-mtheme="light"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-mtheme="light"] input[type="time"]::-webkit-calendar-picker-indicator,
+html[data-mtheme="light"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) !important;
+}
+
+html[data-mtheme="dark"] input[type="date"],
+html[data-mtheme="dark"] input[type="time"],
+html[data-mtheme="dark"] input[type="datetime-local"],
+html:not([data-mtheme="light"]) input[type="date"],
+html:not([data-mtheme="light"]) input[type="time"],
+html:not([data-mtheme="light"]) input[type="datetime-local"] {
+  background-color: #090d16;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+html[data-mtheme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-mtheme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+html[data-mtheme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+html:not([data-mtheme="light"]) input[type="date"]::-webkit-calendar-picker-indicator,
+html:not([data-mtheme="light"]) input[type="time"]::-webkit-calendar-picker-indicator,
+html:not([data-mtheme="light"]) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) !important;
+}
+
+/* Webkit autofill overrides for seamless transitions between light and dark themes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+html[data-mtheme="light"] input:-webkit-autofill {
+  -webkit-text-fill-color: #0f172a !important;
+}
+
+html[data-mtheme="dark"] input:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Ensure all light-mode input fields have dark text and readable placeholders */
+html[data-mtheme="light"] input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+html[data-mtheme="light"] textarea {
+  color: #0f172a;
+}
+
+html[data-mtheme="light"] input::placeholder,
+html[data-mtheme="light"] textarea::placeholder {
+  color: #64748b !important;
 }

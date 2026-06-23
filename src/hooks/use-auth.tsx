@@ -110,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
+    let currentUserId: string | null = null;
 
     const safetyTimer = setTimeout(() => {
       if (mounted) {
@@ -131,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
         const currentUser = session?.user ?? null;
         setUser(currentUser);
+        currentUserId = currentUser?.id ?? null;
 
         if (currentUser) {
           // Don't block session loading on profile fetch — chrome
@@ -159,6 +161,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
       const currentUser = session?.user ?? null;
+
+      if (currentUserId === currentUser?.id) {
+        // User identity hasn't changed. Do not fetch profile or trigger state updates.
+        setLoading(false);
+        return;
+      }
+
+      currentUserId = currentUser?.id ?? null;
       setUser(currentUser);
 
       if (currentUser) {

@@ -3,23 +3,21 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Bot, MessageSquare, Shield, Zap, TrendingUp, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Bot, MessageSquare, Shield, TrendingUp, Users } from "lucide-react";
 import { ReferenceGrid } from "@/components/marketing/reference-grid";
 import { SpotlightCard } from "@/components/marketing/spotlight-card";
 import { MagneticButton } from "@/components/marketing/magnetic-button";
 import { AIChatSimulation } from "@/components/marketing/ai-chat-simulation";
-import { WorkflowVisualizer } from "@/components/marketing/workflow-visualizer";
 import { CRMPreviewBoard } from "@/components/marketing/crm-preview-board";
 import { ReferenceDashboard } from "@/components/marketing/reference-dashboard";
-import { AnimatedMetrics } from "@/components/marketing/animated-metrics";
-import { InfiniteLogoMarquee } from "@/components/marketing/infinite-logo-marquee";
-import { FloatingNotification } from "@/components/marketing/floating-notification";
+import { SocialProofMetrics } from "@/components/marketing/social-proof-metrics";
+import { BookDemoTrigger } from "@/components/marketing/book-demo-trigger";
 
 export default function HomePage() {
   return (
     <div className="w-full flex flex-col overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative w-full min-h-[88vh] flex flex-col items-center justify-start pt-24 md:pt-32 pb-0 px-4 md:px-6 overflow-hidden">
+      <section className="relative w-full min-h-[88vh] flex flex-col items-center justify-start pt-20 md:pt-28 pb-0 px-4 md:px-6 overflow-hidden">
         {/* Exact Staggered Grid Background from Reference Image */}
         <ReferenceGrid gridSize={85} />
         
@@ -39,7 +37,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7.5xl font-semibold tracking-tight leading-[1.1] max-w-4xl text-[var(--m-text-heading)] transition-colors duration-300"
+            className="text-3xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1] max-w-3xl text-[var(--m-text-heading)] transition-colors duration-300"
           >
             The AI WhatsApp CRM your product needs
           </motion.h1>
@@ -49,7 +47,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-sm sm:text-base max-w-2xl mt-6 leading-relaxed text-[var(--m-text-tertiary)] transition-colors duration-300"
+            className="text-xs sm:text-sm md:text-sm max-w-xl mt-5 leading-relaxed text-[var(--m-text-tertiary)] transition-colors duration-300"
           >
             Our AI CRM solution enhances your customer support with advanced artificial intelligence, streamlining sales operations and driving efficiency and conversion.
           </motion.p>
@@ -69,12 +67,9 @@ export default function HomePage() {
                 Get Started
               </Link>
             </MagneticButton>
-            <Link
-              href="/book-demo"
-              className="bg-[var(--m-bg-secondary)]/85 border border-[var(--m-border-primary)] hover:bg-[var(--m-bg-tertiary)]/85 text-[var(--m-text-secondary)] px-8 py-3 rounded-full text-xs font-semibold transition-all flex items-center justify-center"
-            >
+            <BookDemoTrigger className="bg-[var(--m-bg-secondary)]/85 border border-[var(--m-border-primary)] hover:bg-[var(--m-bg-tertiary)]/85 text-[var(--m-text-secondary)] px-8 py-3 rounded-full text-xs font-semibold transition-all flex items-center justify-center">
               Learn More
-            </Link>
+            </BookDemoTrigger>
           </motion.div>
         </div>
 
@@ -89,13 +84,95 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 2. TRUST / MARQUEE SECTION */}
-      <section className="py-12 relative border-y border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/20 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col items-center">
-          <span className="text-[10px] uppercase font-bold tracking-widest mb-6 text-[var(--m-text-muted)] transition-colors duration-300">
-            TRUSTED BY THE WORLD'S BEST HYPER-GROWTH TEAMS
-          </span>
-          <InfiniteLogoMarquee speed="medium" />
+      {/* 2. HOW IT WORKS SECTION */}
+      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto space-y-16 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto space-y-4"
+        >
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--m-text-heading)] transition-colors duration-300">
+            How it works
+          </h2>
+          <p className="text-sm text-[var(--m-text-tertiary)] transition-colors duration-300">
+            Getting started with ChatNexGen Ai takes minutes, not months.
+          </p>
+        </motion.div>
+
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+          {/* Connecting Line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="absolute top-[20px] left-[20px] w-[calc(66.666%)] h-[1px] bg-emerald-500/20 hidden md:block z-0 origin-left"
+          />
+
+          {/* Step 1 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="relative flex flex-col items-center md:items-start text-center md:text-left z-10 group"
+          >
+            <div className="w-10 h-10 rounded-lg border border-emerald-500/30 bg-[var(--m-bg-primary)] flex items-center justify-center text-xs font-semibold text-emerald-400 mb-6 shadow-md shadow-emerald-500/5 group-hover:border-emerald-500 group-hover:text-emerald-300 transition-all duration-300">
+              01
+            </div>
+            <div className="max-w-xs space-y-3">
+              <h3 className="text-base md:text-lg font-semibold text-[var(--m-text-heading)] leading-snug transition-colors duration-300">
+                Connect and Configure — No Developer Needed
+              </h3>
+              <p className="text-xs md:text-sm text-[var(--m-text-tertiary)] leading-relaxed transition-colors duration-300">
+                Link your WhatsApp number, define your chatbot flows, and set your automation rules — all through a simple visual builder. Most businesses are live within a single afternoon.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Step 2 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative flex flex-col items-center md:items-start text-center md:text-left z-10 group"
+          >
+            <div className="w-10 h-10 rounded-lg border border-emerald-500/30 bg-[var(--m-bg-primary)] flex items-center justify-center text-xs font-semibold text-emerald-400 mb-6 shadow-md shadow-emerald-500/5 group-hover:border-emerald-500 group-hover:text-emerald-300 transition-all duration-300">
+              02
+            </div>
+            <div className="max-w-xs space-y-3">
+              <h3 className="text-base md:text-lg font-semibold text-[var(--m-text-heading)] leading-snug transition-colors duration-300">
+                Your Business Runs. Conversations Run on Autopilot.
+              </h3>
+              <p className="text-xs md:text-sm text-[var(--m-text-tertiary)] leading-relaxed transition-colors duration-300">
+                Leads get instant replies. Customers get follow-ups. Automated messaging reaches your list instantly. All of it runs in the background while you focus on actually growing.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Step 3 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="relative flex flex-col items-center md:items-start text-center md:text-left z-10 group"
+          >
+            <div className="w-10 h-10 rounded-lg border border-emerald-500/30 bg-[var(--m-bg-primary)] flex items-center justify-center text-xs font-semibold text-emerald-400 mb-6 shadow-md shadow-emerald-500/5 group-hover:border-emerald-500 group-hover:text-emerald-300 transition-all duration-300">
+              03
+            </div>
+            <div className="max-w-xs space-y-3">
+              <h3 className="text-base md:text-lg font-semibold text-[var(--m-text-heading)] leading-snug transition-colors duration-300">
+                See Exactly What's Making You Money
+              </h3>
+              <p className="text-xs md:text-sm text-[var(--m-text-tertiary)] leading-relaxed transition-colors duration-300">
+                Real-time dashboards show open rates, reply rates, conversions, and drop-offs. Know what's working. Double down on it. Kill what isn't. Every week gets better than the last.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -146,45 +223,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. METRICS / NUMBERS IN VIEW */}
-      <section className="py-14 border-t border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/10 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <span className="text-[10px] uppercase font-bold tracking-widest mb-2 block text-[var(--m-text-muted)] transition-colors">
-            PLATFORM CAPACITIES & METRICS
-          </span>
-          <AnimatedMetrics />
-        </div>
-      </section>
+      {/* 4. SOCIAL PROOF / METRICS */}
+      <section className="py-24 px-4 md:px-6 border-y border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/10 transition-colors duration-300 relative">
+        <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto space-y-4"
+          >
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-emerald-500/25 bg-emerald-950/20 text-emerald-400 text-[11px] font-semibold tracking-wide uppercase">
+              ✨ Social Proof
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--m-text-heading)] transition-colors duration-300">
+              Trusted by 10,000+ businesses
+            </h2>
+            <p className="text-sm text-[var(--m-text-tertiary)] max-w-xl mx-auto transition-colors duration-300">
+              See why growing businesses choose ChatNexGen Ai to automate their WhatsApp communication.
+            </p>
+          </motion.div>
 
-      {/* 5. WORKFLOW AUTOMATION BUILDER */}
-      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 uppercase tracking-wide">
-            <Zap className="size-4" /> Trigger Workflows
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--m-text-heading)] transition-colors duration-300">
-            Connect CRM Actions in Real-Time.
-          </h2>
-          <p className="text-sm text-[var(--m-text-tertiary)] transition-colors duration-300">
-            Build custom automation rules. Define triggers (e.g. lead replies to broadcast) and map them to actions (update CRM deal, send webhook, dispatch notification, route owner).
-          </p>
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 bg-cyan-500/5 blur-[120px] pointer-events-none" />
-          <WorkflowVisualizer />
+          <SocialProofMetrics />
         </div>
       </section>
 
       {/* 6. CRM BOARD SHOWCASE */}
       <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
         <div className="lg:col-span-2 relative">
-          <div className="absolute inset-0 bg-indigo-500/5 blur-[100px] pointer-events-none" />
+          <div className="absolute inset-0 bg-emerald-500/5 blur-[100px] pointer-events-none" />
           <CRMPreviewBoard />
         </div>
 
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 uppercase tracking-wide">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-400 uppercase tracking-wide">
             <Users className="size-4" /> CRM Pipelines
           </div>
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-tight text-[var(--m-text-heading)] transition-colors duration-300">
@@ -204,52 +276,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. DETAILED FEATURE CARDS (HANDCRAFTED) */}
-      <section className="py-24 px-4 md:px-6 max-w-6xl mx-auto space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--m-text-heading)] transition-colors duration-300">
-            Handcrafted for Growth.
-          </h2>
-          <p className="text-sm text-[var(--m-text-tertiary)] transition-colors duration-300">
-            Every feature is designed to be highly reliable, visually clean, and lightning fast.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <SpotlightCard>
-            <Bot className="size-6 text-emerald-400 mb-4" />
-            <h4 className="text-sm font-semibold text-[var(--m-text-primary)] transition-colors duration-300">
-              WhatsApp Broadcasts
-            </h4>
-            <p className="text-xs mt-2 leading-relaxed text-[var(--m-text-tertiary)] transition-colors duration-300">
-              Send personalized template messages to segmented lists. Support media headers (images, documents) and custom quick-reply buttons.
-            </p>
-          </SpotlightCard>
-
-          {/* Card 2 */}
-          <SpotlightCard glowColor="rgba(59, 130, 246, 0.15)">
-            <MessageSquare className="size-6 text-blue-400 mb-4" />
-            <h4 className="text-sm font-semibold text-[var(--m-text-primary)] transition-colors duration-300">
-              Shared Team Inbox
-            </h4>
-            <p className="text-xs mt-2 leading-relaxed text-[var(--m-text-tertiary)] transition-colors duration-300">
-              Enable multiple agents to manage the same WhatsApp number. Assign threads, leave internal notes, and avoid customer collision.
-            </p>
-          </SpotlightCard>
-
-          {/* Card 3 */}
-          <SpotlightCard glowColor="rgba(168, 85, 247, 0.15)">
-            <Shield className="size-6 text-purple-400 mb-4" />
-            <h4 className="text-sm font-semibold text-[var(--m-text-primary)] transition-colors duration-300">
-              Meta API Compliant
-            </h4>
-            <p className="text-xs mt-2 leading-relaxed text-[var(--m-text-tertiary)] transition-colors duration-300">
-              Built on official WhatsApp Cloud API hosts. Zero risk of numbers getting banned. Secure data transport and end-to-end reliability.
-            </p>
-          </SpotlightCard>
-        </div>
-      </section>
 
       {/* 8. GIANT CTA SECTION */}
       <section className="py-24 px-4 md:px-6 relative text-center max-w-6xl mx-auto border-t border-[var(--m-border-primary)] transition-colors duration-300">
@@ -271,12 +297,9 @@ export default function HomePage() {
                 Start Free Trial <ArrowRight className="size-3.5" />
               </Link>
             </MagneticButton>
-            <Link
-              href="/book-demo"
-              className="px-6 py-3 rounded-xl text-xs font-semibold transition-all border bg-[var(--m-bg-secondary)] border-[var(--m-border-primary)] text-[var(--m-text-secondary)] hover:bg-[var(--m-bg-tertiary)]"
-            >
+            <BookDemoTrigger className="px-6 py-3 rounded-xl text-xs font-semibold transition-all border bg-[var(--m-bg-secondary)] border-[var(--m-border-primary)] text-[var(--m-text-secondary)] hover:bg-[var(--m-bg-tertiary)]">
               Contact Enterprise
-            </Link>
+            </BookDemoTrigger>
           </div>
         </div>
       </section>

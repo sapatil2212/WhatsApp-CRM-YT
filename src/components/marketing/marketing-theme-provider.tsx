@@ -19,54 +19,28 @@ const MarketingThemeContext = createContext<MarketingThemeContextType>({
 export function MarketingThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("dark");
   const [resolvedTheme, setResolvedTheme] = useState<"dark" | "light">("dark");
-  const [mounted, setMounted] = useState(false);
 
-  // Initialize theme from storage or system on client side
+  // Read from localStorage once on mount — default is always dark
   useEffect(() => {
-    const saved = localStorage.getItem("wacrm.mtheme") as ThemeMode | null;
-    const initialMode: ThemeMode = saved === "light" || saved === "dark" || saved === "system" ? saved : "dark";
+    const saved = localStorage.getItem("chatnexgenai.mtheme");
+    const initialMode: ThemeMode = saved === "light" || saved === "dark" ? saved : "dark";
     setModeState(initialMode);
-    setMounted(true);
+    setResolvedTheme(initialMode === "light" ? "light" : "dark");
+    document.documentElement.setAttribute("data-mtheme", initialMode === "light" ? "light" : "dark");
   }, []);
 
-  // Update resolved theme and data attribute whenever mode changes
+  // Apply theme change immediately when mode changes
   useEffect(() => {
-    if (!mounted) return;
-
-    const root = document.documentElement;
-
-    const updateTheme = () => {
-      let activeTheme: "dark" | "light" = "dark";
-
-      if (mode === "system") {
-        const isSystemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-        activeTheme = isSystemLight ? "light" : "dark";
-      } else {
-        activeTheme = mode;
-      }
-
-      setResolvedTheme(activeTheme);
-      root.setAttribute("data-mtheme", activeTheme);
-    };
-
-    updateTheme();
-
-    // Listen for system preference changes if mode is 'system'
-    if (mode === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
-      const handler = () => updateTheme();
-      mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
-    }
-  }, [mode, mounted]);
+    const active: "dark" | "light" = mode === "light" ? "light" : "dark";
+    setResolvedTheme(active);
+    document.documentElement.setAttribute("data-mtheme", active);
+  }, [mode]);
 
   const setMode = (newMode: ThemeMode) => {
     setModeState(newMode);
-    localStorage.setItem("wacrm.mtheme", newMode);
+    localStorage.setItem("chatnexgenai.mtheme", newMode);
   };
 
-  // Prevent flash by avoiding rendering with incorrect server state
-  // During SSR we default to the dark fallback
   return (
     <MarketingThemeContext.Provider value={{ mode, resolvedTheme, setMode }}>
       {children}

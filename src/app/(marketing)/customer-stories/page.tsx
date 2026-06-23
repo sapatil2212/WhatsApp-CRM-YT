@@ -33,7 +33,7 @@ export default function CustomerStoriesPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Helping Startups <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Close 3x More Deals.
           </span>
         </h1>

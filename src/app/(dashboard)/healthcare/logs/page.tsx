@@ -251,7 +251,7 @@ export default function WhatsAppAILogs() {
                         {log.ai_response}
                       </td>
                       <td className="p-4">
-                        <Badge className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold uppercase tracking-wider">
+                        <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[10px] font-semibold uppercase tracking-wider">
                           {log.detected_intent || "fallback"}
                         </Badge>
                       </td>
@@ -319,7 +319,7 @@ export default function WhatsAppAILogs() {
             <div className="space-y-4">
               <DialogHeader>
                 <DialogTitle className="text-white text-xl flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-indigo-400 animate-pulse" />
+                  <Sparkles className="h-5 w-5 text-teal-400 animate-pulse" />
                   AI Transaction Details
                 </DialogTitle>
                 <DialogDescription className="text-slate-400">
@@ -338,7 +338,7 @@ export default function WhatsAppAILogs() {
                 </div>
                 <div>
                   <span className="text-slate-500 block uppercase tracking-wider mb-0.5">Detected Intent</span>
-                  <Badge className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold uppercase tracking-wider mt-1">
+                  <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[10px] font-semibold uppercase tracking-wider mt-1">
                     {selectedLog.detected_intent || "fallback"}
                   </Badge>
                 </div>

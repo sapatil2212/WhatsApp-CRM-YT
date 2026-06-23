@@ -205,17 +205,21 @@ async function processWebhook(body: { entry?: WhatsAppWebhookEntry[] }) {
 
       const phoneNumberId = value.metadata.phone_number_id
 
-      // Find user's config by phone_number_id
-      const { data: config, error: configError } = await supabaseAdmin()
+      // Find user's config by phone_number_id. Since unique constraint is on user_id
+      // but not phone_number_id, a phone_number_id can be shared or left over in old configs.
+      // We select the most recently updated active configuration.
+      const { data: configs, error: configError } = await supabaseAdmin()
         .from('whatsapp_config')
         .select('*')
         .eq('phone_number_id', phoneNumberId)
-        .single()
+        .order('updated_at', { ascending: false })
 
-      if (configError || !config) {
+      if (configError || !configs || configs.length === 0) {
         console.error('No config found for phone_number_id:', phoneNumberId)
         continue
       }
+
+      const config = configs[0]
 
       const decryptedAccessToken = decrypt(config.access_token)
 

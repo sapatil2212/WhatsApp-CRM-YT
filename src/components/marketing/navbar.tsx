@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useMarketingTheme } from "@/components/marketing/marketing-theme-provider";
 import { ThemeToggle } from "./theme-toggle";
 import { MagneticButton } from "./magnetic-button";
+import { BookDemoTrigger } from "./book-demo-trigger";
 import { cn } from "@/lib/utils";
 
 function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
@@ -63,7 +64,6 @@ export function GlassNavbar() {
   ];
 
   const dropdownLinks = [
-    { name: "WhatsApp Campaigns", href: "/whatsapp-marketing" },
     { name: "Shared Inbox", href: "/shared-team-inbox" },
     { name: "CRM Engine", href: "/crm" },
     { name: "Analytics Dashboard", href: "/analytics" },
@@ -117,12 +117,11 @@ export function GlassNavbar() {
         >
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/60 transition-all duration-300">
-              <Bot className="size-3.5 group-hover:scale-110 transition-transform" />
-            </div>
-            <span className="text-sm font-extrabold tracking-tight flex items-center gap-1 text-[var(--m-text-heading)]">
-              wacrm <Sparkles className="size-2.5 text-emerald-400 animate-pulse" />
-            </span>
+            <img
+              src={isLight ? "/images/logo/chatnexgen-logo-light.png" : "/images/logo/chatnexgen-logo.png"}
+              alt="ChatNexGen Ai Logo"
+              className="h-8 w-auto object-contain group-hover:scale-110 transition-transform"
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -139,64 +138,16 @@ export function GlassNavbar() {
                 {link.name}
               </Link>
             ))}
-
-            {/* Explore dropdown — click-controlled */}
-            <div ref={dropdownRef} className="relative">
-              <button
-                onClick={() => setDropdownOpen((v) => !v)}
-                className={cn(
-                  "flex items-center gap-1 text-[11px] font-semibold transition-colors cursor-pointer select-none whitespace-nowrap",
-                  linkCls
-                )}
-              >
-                Explore
-                <ChevronDown
-                  className={cn(
-                    "size-3 transition-transform duration-200",
-                    dropdownOpen && "rotate-180"
-                  )}
-                />
-              </button>
-
-              {dropdownOpen && (
-                <div
-                  className={cn(
-                    "absolute top-full right-0 mt-3 w-52 rounded-2xl border p-2 z-50",
-                    "animate-in fade-in slide-in-from-top-2 duration-150",
-                    isLight
-                      ? "border-slate-200 bg-white shadow-xl shadow-black/5"
-                      : "border-slate-800 bg-slate-950 shadow-2xl shadow-black/50"
-                  )}
-                >
-                  {dropdownLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setDropdownOpen(false)}
-                      className={cn(
-                        "block text-[11px] font-semibold px-3 py-1.5 rounded-xl transition-colors",
-                        pathname === link.href
-                          ? "text-emerald-500 bg-emerald-500/5"
-                          : "text-[var(--m-text-secondary)] hover:bg-[var(--m-bg-tertiary)] hover:text-[var(--m-text-heading)]"
-                      )}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </nav>
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2.5 shrink-0">
             <ThemeToggle />
-            <Link
-              href="/book-demo"
-              className={cn("text-[11px] font-semibold transition-colors px-3 py-1.5 whitespace-nowrap", linkCls)}
+            <BookDemoTrigger
+              className={cn("text-[11px] font-semibold transition-colors px-3 py-1.5 whitespace-nowrap cursor-pointer", linkCls)}
             >
               Book Demo
-            </Link>
+            </BookDemoTrigger>
             <MagneticButton>
               <Link
                 href={isLoggedIn ? "/dashboard" : "/login"}
@@ -258,13 +209,9 @@ export function GlassNavbar() {
             <div className="flex justify-center py-1">
               <ThemeToggle className="w-full justify-around" />
             </div>
-            <Link
-              href="/book-demo"
-              onClick={() => setIsOpen(false)}
-              className="w-full text-center text-xs font-bold py-3 rounded-full border transition-colors border-[var(--m-border-primary)] bg-[var(--m-bg-tertiary)] text-[var(--m-text-primary)]"
-            >
+            <BookDemoTrigger className="w-full text-center text-xs font-bold py-3 rounded-full border transition-colors border-[var(--m-border-primary)] bg-[var(--m-bg-tertiary)] text-[var(--m-text-primary)]">
               Book Demo
-            </Link>
+            </BookDemoTrigger>
             <Link
               href={isLoggedIn ? "/dashboard" : "/login"}
               onClick={() => setIsOpen(false)}

@@ -154,7 +154,7 @@ export default function ClinicSetupWizard() {
     supported_languages: ["English"],
     greeting_message: "Hello! Welcome to our clinic. How can we help you today?",
     after_hours_message: "Thank you for reaching out. Our clinic is currently closed, but a representative will get back to you during working hours.",
-    escalation_keywords: "human, agent, representative, doctor, help",
+    escalation_keywords: "human, agent, representative, help",
     emergency_keywords: "emergency, chest pain, bleeding, accident, heart, dying",
     human_handover_enabled: true,
   });
@@ -772,6 +772,9 @@ export default function ClinicSetupWizard() {
           onConflict: "clinic_id",
         });
         if (error) throw error;
+
+        // Invalidate server-side AI cache so changes take effect immediately
+        await fetch("/api/healthcare/invalidate-cache", { method: "POST" }).catch(() => {});
 
         toast.success("AI Healthcare Automation onboarding setup complete!");
       }
@@ -1686,7 +1689,7 @@ export default function ClinicSetupWizard() {
               <div className="rounded-xl border border-slate-800 bg-slate-950/40 p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="bg-purple-500/10 p-2 rounded-lg text-purple-400 border border-purple-500/20">
+                    <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-400 border border-emerald-500/20">
                       <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
@@ -1712,7 +1715,7 @@ export default function ClinicSetupWizard() {
                     {/* Sample Downloads */}
                     <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950/60 p-3 rounded-lg border border-slate-900">
                       <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <AlertCircle className="h-3.5 w-3.5 text-purple-400" />
+                        <AlertCircle className="h-3.5 w-3.5 text-emerald-400" />
                         <span>Not sure what format to use? Guidance templates:</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1772,7 +1775,7 @@ export default function ClinicSetupWizard() {
                         type="button"
                         disabled={importing}
                         onClick={handleAIImport}
-                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs h-9 flex items-center gap-1.5 shadow-lg shadow-purple-950/20 px-4"
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 flex items-center gap-1.5 shadow-lg shadow-emerald-950/20 px-4"
                       >
                         {importing ? (
                           <>
@@ -1860,7 +1863,7 @@ export default function ClinicSetupWizard() {
               <div className="rounded-xl border border-slate-800 bg-slate-950/40 p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="bg-purple-500/10 p-2 rounded-lg text-purple-400 border border-purple-500/20">
+                    <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-400 border border-emerald-500/20">
                       <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
@@ -1886,7 +1889,7 @@ export default function ClinicSetupWizard() {
                     {/* Sample Downloads */}
                     <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950/60 p-3 rounded-lg border border-slate-900">
                       <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <AlertCircle className="h-3.5 w-3.5 text-purple-400" />
+                        <AlertCircle className="h-3.5 w-3.5 text-emerald-400" />
                         <span>Not sure what format to use? Guidance templates:</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1946,7 +1949,7 @@ export default function ClinicSetupWizard() {
                         type="button"
                         disabled={faqImporting}
                         onClick={handleAIFAQImport}
-                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs h-9 flex items-center gap-1.5 shadow-lg shadow-purple-950/20 px-4"
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-9 flex items-center gap-1.5 shadow-lg shadow-emerald-950/20 px-4"
                       >
                         {faqImporting ? (
                           <>

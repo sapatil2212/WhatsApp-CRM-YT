@@ -10,8 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, ArrowLeft, Sparkles } from "lucide-react";
 import { InteractiveGrid } from "@/components/marketing/interactive-grid";
+import { useTheme } from "@/hooks/use-theme";
 
 export default function LoginPage() {
+  const { mode } = useTheme();
+  const isLight = mode === "light";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +46,7 @@ export default function LoginPage() {
       {/* Decorative Grids and Blurs */}
       <InteractiveGrid gridSize={40} className="opacity-20" />
       <div className="absolute top-[20%] left-[20%] w-[50%] h-[50%] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[20%] right-[20%] w-[50%] h-[50%] rounded-full bg-cyan-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[20%] w-[50%] h-[50%] rounded-full bg-teal-500/5 blur-[120px] pointer-events-none" />
 
       {/* Floating Home Link */}
       <Link
@@ -55,9 +58,11 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md border-[var(--m-border-primary)] bg-[var(--m-bg-glass)] shadow-[var(--m-shadow-card)] backdrop-blur-xl relative z-10 p-2">
         <CardHeader className="items-center text-center pb-4">
-          <div className="mb-2 w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <Bot className="size-5" />
-          </div>
+          <img
+            src={isLight ? "/images/logo/chatnexgen-logo-light.png" : "/images/logo/chatnexgen-logo.png"}
+            alt="ChatNexGen Ai Logo"
+            className="mb-2 h-10 w-auto object-contain"
+          />
           <CardTitle className="text-xl font-bold tracking-tight text-[var(--m-text-heading)] flex items-center gap-1.5 justify-center">
             Sign In <Sparkles className="size-4 text-emerald-400" />
           </CardTitle>

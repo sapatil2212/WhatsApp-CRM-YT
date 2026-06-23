@@ -1,6 +1,6 @@
 # Changelog
 
-User-visible changes in `wacrm`. Self-hosters: when pulling an update,
+User-visible changes in `ChatNexGen Ai`. Self-hosters: when pulling an update,
 check this file for any **migration required** notes and apply the
 matching SQL files from `supabase/migrations/` against your Supabase
 project before restarting the app.
@@ -24,19 +24,19 @@ conversation engine that runs alongside Automations. Also ships a
   one active run per contact. Widened `messages.content_type` CHECK
   to accept `'interactive'`; added `interactive_reply_id` column so
   the inbox can render button/list taps.
-  ([#112](https://github.com/ArnasDon/wacrm/pull/112))
+  ([#112](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/112))
 - **Runner engine.** `dispatchInboundToFlows` parses every inbound
   webhook, decides whether the message is a reply on an active run
   or a fresh trigger, advances the state machine, and reports back
   to the webhook so consumed messages don't also fire automations.
   Idempotent on Meta's `message_id`.
-  ([#114](https://github.com/ArnasDon/wacrm/pull/114))
+  ([#114](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/114))
 - **No-code builder UI** at `/flows`. Linear-list editor with
   per-node config forms, live validator, draft/active/archived
   status, and a 5-route REST API (`GET/POST /api/flows`,
   `GET/PUT/DELETE /api/flows/[id]`, `POST /api/flows/[id]/activate`,
   `GET /api/flows/[id]/runs`, `GET /api/flows/templates`).
-  ([#115](https://github.com/ArnasDon/wacrm/pull/115))
+  ([#115](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/115))
 - **Templates + v1.5 node types.** Three starter templates
   (Welcome menu, FAQ bot, Lead capture) cloneable from the New-flow
   dialog. Three new node types: `collect_input` (capture customer
@@ -44,12 +44,12 @@ conversation engine that runs alongside Automations. Also ships a
   field), `set_tag` (add or remove a tag). `{{vars.X}}` interpolation
   in send_message + collect_input prompts. Per-flow run-history
   viewer at `/flows/[id]/runs`.
-  ([#117](https://github.com/ArnasDon/wacrm/pull/117))
+  ([#117](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/117))
 - **Stale-run sweep cron** at `GET /api/flows/cron` — marks runs
   past their configured timeout (default 24h) as `timed_out` so
   abandoned conversations free up the contact for new triggers.
   Reuses `AUTOMATION_CRON_SECRET`.
-  ([#114](https://github.com/ArnasDon/wacrm/pull/114))
+  ([#114](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/114))
 
 #### Color themes
 
@@ -59,12 +59,12 @@ conversation engine that runs alongside Automations. Also ships a
   `dataset.theme`, persisted to `localStorage`. Inline boot script in
   `layout.tsx` replays the choice before first paint so there's no
   flash of the default.
-  ([#132](https://github.com/ArnasDon/wacrm/pull/132))
+  ([#132](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/132))
 - **Theme tokenization sweep** — every previously hard-coded
   `violet-*` Tailwind class replaced with `primary` tokens across
   ~49 files. Picking a non-violet theme now themes the whole app,
   not just the chrome.
-  ([#133](https://github.com/ArnasDon/wacrm/pull/133))
+  ([#133](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/133))
 
 ### Changed
 
@@ -73,44 +73,44 @@ conversation engine that runs alongside Automations. Also ships a
 - **Flows is now available to every authenticated user.** The
   per-account beta gate is gone; the sidebar entry + page header
   carry a small "Beta" chip as the only remaining signal.
-  ([#134](https://github.com/ArnasDon/wacrm/pull/134))
+  ([#134](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/134))
 - **Editor UX**:
   - Internal `node_key` + per-button/row `reply_id` identifiers
     hidden behind a per-node "Show advanced" disclosure.
-    ([#118](https://github.com/ArnasDon/wacrm/pull/118))
+    ([#118](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/118))
   - `send_list` nodes can have multiple sections.
-    ([#119](https://github.com/ArnasDon/wacrm/pull/119))
+    ([#119](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/119))
   - Collapsed node cards show a 1-line content preview per node
     type (text excerpt, button titles, condition summary, etc.).
-    ([#120](https://github.com/ArnasDon/wacrm/pull/120))
+    ([#120](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/120))
   - Validation issues are clickable: jump to + flash the offending
     node.
-    ([#121](https://github.com/ArnasDon/wacrm/pull/121))
+    ([#121](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/121))
   - Unsaved-changes "● Edited" indicator + `beforeunload` reload
     guard.
-    ([#122](https://github.com/ArnasDon/wacrm/pull/122))
+    ([#122](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/122))
   - New-flow dialog actually widens to fit the 3 template cards
     (was capped at 384px by a baked-in `sm:max-w-sm` from shadcn).
-    ([#129](https://github.com/ArnasDon/wacrm/pull/129),
-    [#131](https://github.com/ArnasDon/wacrm/pull/131))
+    ([#129](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/129),
+    [#131](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/131))
   - Validation panel pinned to the viewport bottom so
     activate-readiness follows the user as they scroll through nodes.
-    ([#130](https://github.com/ArnasDon/wacrm/pull/130))
+    ([#130](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/130))
 
 #### Engine reliability
 
 - **Atomic `execution_count` increment** via SECURITY DEFINER RPC —
   prevents lost counts when two webhooks start runs concurrently.
   Mirrors the automations engine pattern.
-  ([#124](https://github.com/ArnasDon/wacrm/pull/124))
+  ([#124](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/124))
 - **Preload all flow_nodes once per dispatch** — one SELECT per
   inbound instead of one per advance-loop iteration. A 5-node
   auto-advance chain now costs 1 round trip, not 5.
-  ([#125](https://github.com/ArnasDon/wacrm/pull/125))
+  ([#125](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/125))
 - **Wasted re-read dropped** after reprompt reset; `loadActiveRun`
   switched to defensive `.limit(1)` so a migration glitch producing
   duplicates can't crash dispatch.
-  ([#126](https://github.com/ArnasDon/wacrm/pull/126))
+  ([#126](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/126))
 
 ### Security
 
@@ -118,11 +118,11 @@ conversation engine that runs alongside Automations. Also ships a
   text is no longer persisted to `flow_run_events.payload`; only
   the length is. A `collect_input` prompt asking "what's your card
   number?" used to leave the PAN sitting in the events table.
-  ([#123](https://github.com/ArnasDon/wacrm/pull/123))
+  ([#123](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/123))
 - **Constant-time cron-secret compare** on `/api/flows/cron`
   (`crypto.timingSafeEqual`) to close a theoretical
   timing-side-channel on the `x-cron-secret` header check.
-  ([#127](https://github.com/ArnasDon/wacrm/pull/127))
+  ([#127](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/127))
 
 ### Fixed
 
@@ -130,7 +130,7 @@ conversation engine that runs alongside Automations. Also ships a
   navigating in. Root cause: `useAuth` flipped `loading: false`
   before the profile fetch resolved. `use-auth` now exposes a
   separate `profileLoading` boolean.
-  ([#128](https://github.com/ArnasDon/wacrm/pull/128))
+  ([#128](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/128))
 
 ### Migration required
 
@@ -153,7 +153,7 @@ whether you applied a previous one.
 - **`src/lib/flows/feature-flag.ts`** + its tests. Flows is open to
   all users; the `profiles.beta_features` column itself survives
   for future beta gates.
-  ([#134](https://github.com/ArnasDon/wacrm/pull/134))
+  ([#134](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/pull/134))
 
 ---
 

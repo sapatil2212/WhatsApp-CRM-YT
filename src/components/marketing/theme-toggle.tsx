@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMarketingTheme } from "./marketing-theme-provider";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,6 @@ export function ThemeToggle({ className }: { className?: string }) {
   const options = [
     { value: "light" as const, icon: Sun, label: "Light" },
     { value: "dark" as const, icon: Moon, label: "Dark" },
-    { value: "system" as const, icon: Monitor, label: "System" },
   ];
 
   return (

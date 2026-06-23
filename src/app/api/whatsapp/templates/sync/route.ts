@@ -37,6 +37,7 @@ interface MetaTemplateComponent {
   type: string
   text?: string
   format?: string
+  buttons?: any[]
 }
 
 interface MetaTemplate {
@@ -171,6 +172,7 @@ export async function POST() {
       const body = (t.components ?? []).find((c) => c.type === 'BODY')
       const header = (t.components ?? []).find((c) => c.type === 'HEADER')
       const footer = (t.components ?? []).find((c) => c.type === 'FOOTER')
+      const buttonsComp = (t.components ?? []).find((c) => c.type === 'BUTTONS')
 
       const row = {
         user_id: user.id,
@@ -181,6 +183,7 @@ export async function POST() {
         header_content: header?.text ?? null,
         body_text: body?.text ?? '',
         footer_text: footer?.text ?? null,
+        buttons: buttonsComp?.buttons ?? null,
         status: normalizeStatus(t.status),
         updated_at: new Date().toISOString(),
       }

@@ -152,10 +152,10 @@ export function FloatingDashboard() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[var(--m-border-primary)] pb-2.5 mb-2.5">
             <div className="flex items-center gap-2">
-              <Inbox className="size-3.5 text-cyan-400" />
+              <Inbox className="size-3.5 text-teal-400" />
               <span className="text-xs font-semibold text-[var(--m-text-secondary)]">Shared Inbox</span>
             </div>
-            <span className="text-[8px] bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 rounded px-1.5 font-bold">LIVE</span>
+            <span className="text-[8px] bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded px-1.5 font-bold">LIVE</span>
           </div>
 
           {/* Conversation item list */}
@@ -163,7 +163,7 @@ export function FloatingDashboard() {
             {/* Conversation 1 */}
             <div className="flex items-center justify-between p-2 rounded-lg bg-[var(--m-bg-card)] border border-[var(--m-border-glass)]">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">JD</div>
+                <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">JD</div>
                 <div>
                   <h5 className="text-[11px] font-bold text-[var(--m-text-secondary)]">John Doe</h5>
                   <p className="text-[9px] text-[var(--m-text-tertiary)]">Pricing inquiry... is it self-hosted?</p>

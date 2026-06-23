@@ -78,7 +78,8 @@ export async function POST(request: Request) {
       clinic_id,
       contact_id,
       reminder_24h_sent,
-      reminder_3h_sent,
+      reminder_4h_sent,
+      reminder_2h_sent,
       contacts ( id, name, phone ),
       doctors ( doctor_name, specialization ),
       clinics ( user_id )
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
     .eq('status', 'scheduled')
     .gte('appointment_date', todayStr)
     .lte('appointment_date', in2DaysStr)
-    .or('reminder_24h_sent.eq.false,reminder_3h_sent.eq.false')
+    .or('reminder_24h_sent.eq.false,reminder_4h_sent.eq.false,reminder_2h_sent.eq.false')
 
   if (apptError) {
     console.error('[Reminders] Error fetching appointments:', apptError)
@@ -135,10 +136,11 @@ export async function POST(request: Request) {
     // Decide which reminder (if any) is due right now.
     // Windows are intentionally wider than the cron interval to
     // tolerate slight timing jitter (cron every 30 min → ±15 min).
-    const needs24h = !appt.reminder_24h_sent && hoursUntil >= 20 && hoursUntil <= 25
-    const needs3h  = !appt.reminder_3h_sent  && hoursUntil >=  2 && hoursUntil <=  4
+    const needs24h = !appt.reminder_24h_sent && hoursUntil >= 20 && hoursUntil <= 26
+    const needs4h  = !appt.reminder_4h_sent  && hoursUntil >= 3.5 && hoursUntil <= 5.5
+    const needs2h  = !appt.reminder_2h_sent  && hoursUntil >= 1.5 && hoursUntil <= 3
 
-    if (!needs24h && !needs3h) {
+    if (!needs24h && !needs4h && !needs2h) {
       skipped++
       continue
     }
@@ -172,30 +174,35 @@ export async function POST(request: Request) {
     const sanitizedPhone = sanitizePhoneForMeta(contact.phone)
 
     // Process each due reminder
-    for (const kind of (['24h', '3h'] as const)) {
-      const isNeeded = kind === '24h' ? needs24h : needs3h
+    for (const kind of (['24h', '4h', '2h'] as const)) {
+      const isNeeded = kind === '24h' ? needs24h : kind === '4h' ? needs4h : needs2h
       if (!isNeeded) continue
 
-      const reminderMsg =
-        kind === '24h'
-          ? `⏰ *Appointment Reminder — Tomorrow*\n\nHi ${contact.name || 'there'}! Just a friendly reminder that your appointment with ${docName}${specStr} is scheduled for *${formattedDate} at ${formattedTime}*.\n\nPlease arrive 5–10 minutes early. Reply here if you need to reschedule. See you soon! 🏥`
-          : `🔔 *Appointment in ~3 Hours*\n\nHi ${contact.name || 'there'}! Your appointment with ${docName}${specStr} is in approximately 3 hours — today at *${formattedTime}*.\n\nSee you soon! 🏥`
+      let reminderMsg = ''
+      if (kind === '24h') {
+        reminderMsg = `⏰ *Appointment Reminder — Tomorrow*\n\nHi ${contact.name || 'there'}! Just a friendly reminder that your appointment with ${docName}${specStr} is scheduled for *${formattedDate} at ${formattedTime}*.\n\nPlease arrive 5–10 minutes early. Reply here if you need to reschedule. See you soon! 🏥`
+      } else if (kind === '4h') {
+        reminderMsg = `🔔 *Appointment in ~4 Hours*\n\nHi ${contact.name || 'there'}! Your appointment with ${docName}${specStr} is in approximately 4 hours — today at *${formattedTime}*.\n\nSee you soon! 🏥`
+      } else {
+        reminderMsg = `🔔 *Appointment in ~2 Hours*\n\nHi ${contact.name || 'there'}! Your appointment with ${docName}${specStr} is in approximately 2 hours — today at *${formattedTime}*.\n\nSee you soon! 🏥`
+      }
 
       let sentMessageId = ''
 
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`[Reminders] DEV mode — simulating ${kind} reminder for appt ${appt.id}`)
-        sentMessageId = `dev-reminder-${kind}-${Date.now()}`
-      } else {
-        try {
-          const result = await sendTextMessage({
-            phoneNumberId,
-            accessToken,
-            to: sanitizedPhone,
-            text: reminderMsg,
-          })
-          sentMessageId = result.messageId
-        } catch (err: unknown) {
+      try {
+        const result = await sendTextMessage({
+          phoneNumberId,
+          accessToken,
+          to: sanitizedPhone,
+          text: reminderMsg,
+        })
+        sentMessageId = result.messageId
+      } catch (err: unknown) {
+        if (process.env.NODE_ENV === 'development') {
+          const msg = err instanceof Error ? err.message : String(err)
+          console.warn(`[Reminders] Dev mode error fallback for appt ${appt.id} (${kind}): ${msg}. Simulating success.`)
+          sentMessageId = `dev-reminder-${kind}-${Date.now()}`
+        } else {
           const msg = err instanceof Error ? err.message : String(err)
           console.error(`[Reminders] Meta API failed for appt ${appt.id} (${kind}):`, msg)
           skipped++
@@ -247,10 +254,21 @@ export async function POST(request: Request) {
       }
 
       // Mark the reminder as sent so it isn't re-sent on the next cron run
-      const flagColumn = kind === '24h' ? 'reminder_24h_sent' : 'reminder_3h_sent'
+      const flagUpdates: Record<string, boolean> = {}
+      if (kind === '24h') {
+        flagUpdates.reminder_24h_sent = true
+      } else if (kind === '4h') {
+        flagUpdates.reminder_24h_sent = true
+        flagUpdates.reminder_4h_sent = true
+      } else if (kind === '2h') {
+        flagUpdates.reminder_24h_sent = true
+        flagUpdates.reminder_4h_sent = true
+        flagUpdates.reminder_2h_sent = true
+      }
+
       await db
         .from('appointments')
-        .update({ [flagColumn]: true })
+        .update(flagUpdates)
         .eq('id', appt.id)
 
       console.log(`[Reminders] Sent ${kind} reminder for appt ${appt.id} to ${contact.phone}`)

@@ -204,7 +204,7 @@ export default function HealthcareDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-slate-400">AI Auto Replies</span>
-              <div className="rounded-lg bg-indigo-500/10 p-2 text-indigo-400">
+              <div className="rounded-lg bg-teal-500/10 p-2 text-teal-400">
                 <Bot className="h-5 w-5" />
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function HealthcareDashboard() {
         <Card className="lg:col-span-5 border-slate-800 bg-slate-900/60 backdrop-blur-md">
           <CardHeader className="flex flex-row items-center justify-between border-b border-slate-800 pb-4">
             <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-              <Brain className="h-5 w-5 text-indigo-400" />
+              <Brain className="h-5 w-5 text-teal-400" />
               Recent AI Activity
             </CardTitle>
             <Link
@@ -320,7 +320,7 @@ export default function HealthcareDashboard() {
                         <User className="h-3 w-3 text-slate-500" />
                         {log.contacts?.name || "Patient"}
                       </span>
-                      <Badge className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[9px] font-semibold uppercase tracking-wider">
+                      <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[9px] font-semibold uppercase tracking-wider">
                         {log.detected_intent}
                       </Badge>
                     </div>
@@ -328,7 +328,7 @@ export default function HealthcareDashboard() {
                       "{log.user_message}"
                     </div>
                     <div className="text-xs text-slate-300 bg-slate-800/40 rounded-lg p-2.5 border border-slate-800/60 mt-1">
-                      <span className="font-semibold text-indigo-400 text-[10px] block uppercase tracking-wider mb-0.5">AI Response:</span>
+                      <span className="font-semibold text-teal-400 text-[10px] block uppercase tracking-wider mb-0.5">AI Response:</span>
                       {log.ai_response}
                     </div>
                     <div className="flex items-center justify-between text-[10px] text-slate-600 mt-1.5">

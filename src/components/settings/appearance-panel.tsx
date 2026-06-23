@@ -62,7 +62,7 @@ export function AppearancePanel() {
                 : "border-border hover:border-slate-400 hover:bg-slate-50 dark:hover:border-slate-700 dark:hover:bg-slate-800/40",
             )}
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
               <Moon className="h-5 w-5" />
             </div>
             <div>
@@ -131,7 +131,7 @@ function ThemeCard({
         "flex flex-col gap-3 rounded-lg border bg-card p-4 text-left transition-colors",
         isActive
           ? "border-primary/60 ring-2 ring-primary/40"
-          : "border-slate-800 hover:border-slate-700 hover:bg-slate-800/40",
+          : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40",
       )}
     >
       <div className="flex items-center justify-between">
@@ -151,8 +151,8 @@ function ThemeCard({
         )}
       </div>
       <div>
-        <div className="text-sm font-semibold text-white">{name}</div>
-        <div className="mt-1 text-xs leading-relaxed text-slate-400">
+        <div className="text-sm font-semibold text-slate-900 dark:text-white">{name}</div>
+        <div className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
           {tagline}
         </div>
       </div>

@@ -46,6 +46,7 @@ interface BroadcastResult {
 interface NewRecipient {
   phone: string
   params?: string[]
+  components?: any[]
 }
 
 export async function POST(request: Request) {
@@ -156,7 +157,8 @@ export async function POST(request: Request) {
             to: variant,
             templateName: template_name,
             language: template_language || 'en_US',
-            params: recipient.params ?? [],
+            params: recipient.params,
+            components: recipient.components,
           })
           sentMessageId = result.messageId
           lastError = null

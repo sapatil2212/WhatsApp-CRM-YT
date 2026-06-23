@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -13,16 +12,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "wacrm",
-    template: "%s — wacrm",
+    default: "ChatNexGen Ai",
+    template: "%s — ChatNexGen Ai",
   },
-  description: "Self-hostable CRM template for WhatsApp.",
+  description: "Self-hostable WhatsApp CRM & Automation Platform.",
   robots: {
     index: false,
     follow: false,
   },
   icons: {
-    icon: [{ url: "/icon" }],
+    icon: [{ url: "/favicon.png", type: "image/png" }],
   },
   formatDetection: {
     email: false,
@@ -59,16 +58,21 @@ const THEME_BOOT_SCRIPT = `
   }
   
   try {
-    var savedMtheme = localStorage.getItem("wacrm.mtheme");
+    var savedMtheme = localStorage.getItem("chatnexgenai.mtheme");
     var mtheme = "dark";
     if (savedMtheme === "light" || savedMtheme === "dark") {
       mtheme = savedMtheme;
-    } else {
-      mtheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
     }
+    // No system preference fallback — dark is always the default
     document.documentElement.setAttribute("data-mtheme", mtheme);
+    if (mtheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   } catch (_e) {
     document.documentElement.setAttribute("data-mtheme", "dark");
+    document.documentElement.classList.add("dark");
   }
 })();
 `;
@@ -84,16 +88,21 @@ export default function RootLayout({
       lang="en"
       data-theme={DEFAULT_THEME}
       data-mtheme="dark"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} dark h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
-        <Script
+        {/* Theme boot — runs before first paint to avoid flash.
+            Rendered as a raw script element in the server HTML;
+            React never re-executes it on the client. */}
+        <script
           id="theme-boot"
-          strategy="beforeInteractive"
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
+          suppressHydrationWarning
         />
       </head>
-      <body className="min-h-full bg-background text-foreground font-sans">
+      <body className="min-h-full bg-background text-foreground font-sans" suppressHydrationWarning>
         <ThemeProvider>
           {children}
           <Toaster

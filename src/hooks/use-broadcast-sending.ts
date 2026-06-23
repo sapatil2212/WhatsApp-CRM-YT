@@ -109,6 +109,98 @@ export function resolveVariables(
   });
 }
 
+function resolveMappingValue(
+  mapping: VariableMapping | undefined,
+  contact: Contact,
+  customValues?: Map<string, string>,
+): string {
+  if (!mapping) return '';
+  if (mapping.type === 'static') return mapping.value;
+  if (mapping.type === 'field') {
+    const fieldMap: Record<string, string | undefined> = {
+      name: contact.name,
+      phone: contact.phone,
+      email: contact.email,
+      company: contact.company,
+    };
+    return fieldMap[mapping.value] ?? '';
+  }
+  if (mapping.type === 'custom_field') {
+    return customValues?.get(mapping.value) ?? '';
+  }
+  return '';
+}
+
+export function resolveTemplateComponents(
+  template: MessageTemplate,
+  variables: Record<string, VariableMapping>,
+  contact: Contact,
+  customValues?: Map<string, string>,
+): any[] {
+  const components: any[] = [];
+
+  // 1. Header component
+  if (template.header_type === 'text' && template.header_content) {
+    const matches = template.header_content.match(/\{\{(\d+)\}\}/g);
+    if (matches && matches.length > 0) {
+      const headerParams = matches.map((m) => {
+        const key = `header_${m.replace(/^\{\{|\}\}$/g, '')}`;
+        const mapping = variables[key];
+        const val = resolveMappingValue(mapping, contact, customValues);
+        return { type: 'text', text: val };
+      });
+      components.push({
+        type: 'header',
+        parameters: headerParams,
+      });
+    }
+  }
+
+  // 2. Body component
+  const bodyMatches = template.body_text.match(/\{\{(\d+)\}\}/g);
+  if (bodyMatches && bodyMatches.length > 0) {
+    const uniqueMatches = [...new Set(bodyMatches)].sort((a, b) => {
+      return Number(a.replace(/^\{\{|\}\}$/g, '')) - Number(b.replace(/^\{\{|\}\}$/g, ''));
+    });
+    const bodyParams = uniqueMatches.map((m) => {
+      const numStr = m.replace(/^\{\{|\}\}$/g, '');
+      const key = `body_${numStr}`;
+      const mapping = variables[key] ?? variables[numStr];
+      const val = resolveMappingValue(mapping, contact, customValues);
+      return { type: 'text', text: val };
+    });
+    components.push({
+      type: 'body',
+      parameters: bodyParams,
+    });
+  }
+
+  // 3. Button components
+  if (template.buttons && Array.isArray(template.buttons)) {
+    template.buttons.forEach((btn: any, btnIndex: number) => {
+      if (btn.type === 'URL' && btn.url) {
+        const btnMatches = btn.url.match(/\{\{(\d+)\}\}/g);
+        if (btnMatches && btnMatches.length > 0) {
+          const btnParams = btnMatches.map((m: string) => {
+            const key = `button_${btnIndex}_${m.replace(/^\{\{|\}\}$/g, '')}`;
+            const mapping = variables[key];
+            const val = resolveMappingValue(mapping, contact, customValues);
+            return { type: 'text', text: val };
+          });
+          components.push({
+            type: 'button',
+            sub_type: 'url',
+            index: String(btnIndex),
+            parameters: btnParams,
+          });
+        }
+      }
+    });
+  }
+
+  return components;
+}
+
 /**
  * Bulk-fetch contact_custom_values for a set of contacts. Returns an
  * index keyed by contact_id → field_id → value.
@@ -431,8 +523,9 @@ export function useBroadcastSending(): UseBroadcastSendingReturn {
           .filter((r) => r.contact?.phone)
           .map((r) => ({
             phone: r.contact!.phone as string,
-            params: r.contact
-              ? resolveVariables(
+            components: r.contact
+              ? resolveTemplateComponents(
+                  payload.template,
                   payload.variables,
                   r.contact,
                   customValueIndex.get(r.contact.id),

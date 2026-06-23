@@ -1,102 +1,123 @@
-# wacrm — CRM Template for WhatsApp
+# ⚡ ChatNexGen Ai
 
-> Self-hostable CRM template for WhatsApp® — shared inbox, contacts,
-> sales pipelines, broadcasts, and no-code automations. Fork it, brand
-> it, host it.
+> The ultimate self-hostable CRM and no-code automation engine built for the official WhatsApp Business (Cloud) API. Empower your team with a real-time shared inbox, contact segmentation, visual Kanban pipelines, automated broadcasts, and an autonomous AI Healthcare Assistant.
 
-[![Deploy on Hostinger](https://img.shields.io/badge/Deploy_on-Hostinger-673DE6?style=for-the-badge&logo=hostinger&logoColor=white)](https://www.hostinger.com/web-apps-hosting)
+---
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-violet.svg)](./LICENSE)
-[![CI](https://github.com/ArnasDon/wacrm/actions/workflows/ci.yml/badge.svg)](https://github.com/ArnasDon/wacrm/actions/workflows/ci.yml)
-[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)](https://nextjs.org)
-[![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3ecf8e?logo=supabase)](https://supabase.com)
-[![Stars](https://img.shields.io/github/stars/ArnasDon/wacrm?style=social)](https://github.com/ArnasDon/wacrm/stargazers)
+## 🚀 Key Modules & Features
 
-The marketing site and self-host docs live in a separate repo:
-[ArnasDon/wacrm-site](https://github.com/ArnasDon/wacrm-site)
-([wacrm.tech](https://wacrm.tech)). This repo is the product —
-clone or fork it to run your own CRM.
+### 📥 Real-Time Shared Inbox
+- **Multi-Agent Collaboration:** Connect one official WhatsApp number and let your entire customer support and sales teams collaborate under a single interface.
+- **Thread Assignment:** Assign conversations to specific agents, transition states, and add internal collaborator notes to avoid customer collision.
+- **Media Support:** Seamlessly send and receive text, images, documents, audio, and interactive buttons.
 
-## What you get out of the box
+### 📊 Visual Kanban Pipelines
+- **Design for Chat:** Drag-and-drop deals linked directly to active WhatsApp conversations.
+- **Value Tracking:** Define pipeline stages, assign monetary values to deals, and track your total pipeline value in real-time.
+- **Quick-Actions:** Trigger status updates or send template messages directly from the pipeline view.
 
-- **Shared inbox** on the official WhatsApp Business API — multiple
-  agents working one number, per-conversation assignment, status, and
-  notes.
-- **Contacts + tags + custom fields**, CSV import, deduplication.
-- **Sales pipelines** (Kanban) with deals linked to conversations.
-- **Broadcasts** with Meta-approved templates, delivery + read
-  tracking, per-recipient variable substitution.
-- **No-code automations** — triggers on inbound messages, new
-  contacts, keywords, or schedule; conditional branches, waits,
-  tags, webhooks. Visual builder.
-- **Real-time dashboard** — response times, daily volume, pipeline
-  value, cross-module activity feed.
-- **Account management** — email, password, avatar, global sign-out.
+### 📢 Targeted Broadcast Campaigns
+- **Meta-Approved Templates:** Schedule or instantly dispatch broadcast campaigns to custom lists.
+- **Dynamic Variable Substitution:** Personalize messages with client-specific custom fields.
+- **Analytics Dashboard:** Track precise delivery rates, read rates, and quick-reply button clicks.
 
-## Why fork this?
+### 🔌 No-Code Flow & Automation Builder
+- **Visual Node Builder:** Create complex automation trees with triggers like incoming keywords, contact registration, or schedule events.
+- **Conditional Logic:** Branch flows based on contact tags, custom fields, or business hours.
+- **Action Nodes:** Trigger custom webhooks, assign tags, send template follow-ups, or insert wait steps.
 
-This is a **template**, not a product. Forking means you get:
+### 🏥 Autonomous AI Healthcare Assistant
+- **Dual AI Engine:** Leverages **Google Gemini 1.5/2.0 Flash** as the primary responder with an automatic failover to **OpenAI GPT-4o-Mini** (or OpenRouter) via a built-in circuit breaker.
+- **Strict 4-Step Appointment Booking Flow:**
+  1. *Patient Details:* Collects patient name, age, and reason for visit in a single step.
+  2. *Doctor Selection:* Presents available specialist options.
+  3. *Dynamic Slot Calculation:* Reads real-time doctor schedules, clinic timings, and exceptions, presenting only open times (automatically filtering out lunch breaks and existing bookings).
+  4. *Confirmation:* Finalizes details and logs the appointment.
+- **Google Sheets Sync:** Integrates with Google Sheets using a secure webhook Script to automatically log booked visits in real-time.
+- **Strict Guardrails:** Programmed to never diagnose conditions, never recommend/prescribe medications, bypasses HTML in responses, and triggers instant human agent handover upon detecting emergency or escalation keywords.
 
-- **Full ownership** — your code, your Supabase project, your domain,
-  your data. No SaaS lock-in, no seat pricing, no trust dance.
-- **Full customisation** — add the fields your team needs, remove the
-  modules you don't, redesign anything. The stack is boring on
-  purpose (Next.js + Supabase + Tailwind) so the learning curve is
-  short.
-- **Zero ops to start** — Hostinger Managed Node.js deploys a fork in
-  a few clicks. No Docker, no Kubernetes, no infra team needed.
-- **Real security primitives** — token encryption (AES-256-GCM), RLS
-  on every table, HMAC-verified webhooks, CSP, rate limiting, CI
-  typecheck/build on every PR.
+---
 
-Not a framework. Not an SDK. A concrete, working CRM you can stand up
-in an afternoon and make yours.
+## 🛠️ Technological Stack
 
-## Quick start
+- **Frontend Framework:** Next.js 16 (App Router), React 19, TypeScript
+- **Styling:** Tailwind CSS v4, Framer Motion (smooth page transitions and animations), Lucide Icons
+- **Database & Backend:** Supabase (Postgres, Auth, Realtime listeners, Storage, Row-Level Security)
+- **WhatsApp Gateway:** Meta WhatsApp Cloud API (compliant integration to prevent number bans)
 
+---
+
+## ⚙️ Environment Configuration
+
+To run the application, copy the example environment template:
 ```bash
-# Fork on GitHub first: https://github.com/ArnasDon/wacrm → Fork
-git clone https://github.com/<your-username>/wacrm.git
-cd wacrm
-npm install
-cp .env.local.example .env.local   # fill in Supabase + Meta creds
-npm run dev
+cp .env.local.example .env.local
 ```
 
-Open <http://localhost:3000>. You'll be redirected to `/login` (or
-`/dashboard` if already signed in).
+### Required Configuration
 
-## Documentation
+| Key | Description |
+| :--- | :--- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous API key. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (must remain secret, used for webhook verification and cron triggers). |
+| `ENCRYPTION_KEY` | 64 hex characters (32 bytes) used for encrypting WhatsApp API credentials. |
+| `META_APP_SECRET` | Used to verify HMAC signatures of incoming WhatsApp webhook events. |
 
-Full self-host documentation — Supabase migrations, WhatsApp Business
-API config, and production deploy — lives at
-**[wacrm.tech/docs](https://wacrm.tech/docs)**
-(source: [ArnasDon/wacrm-site](https://github.com/ArnasDon/wacrm-site)).
+### Optional AI Healthcare Configuration
 
-Key pages:
-- [Getting started](https://wacrm.tech/docs/getting-started)
-- [Supabase setup](https://wacrm.tech/docs/supabase-setup)
-- [WhatsApp setup](https://wacrm.tech/docs/whatsapp-setup)
-- [Environment variables](https://wacrm.tech/docs/environment-variables)
-- [Deploy on Hostinger](https://wacrm.tech/docs/deployment-hostinger)
-- [Architecture](https://wacrm.tech/docs/architecture)
-- [Troubleshooting](https://wacrm.tech/docs/troubleshooting)
+| Key | Description |
+| :--- | :--- |
+| `GEMINI_API_KEY` | Google Gemini API Key (required for AI auto-replies). |
+| `OPENAI_API_KEY` | OpenAI/OpenRouter API key (fallback responder if Gemini hits rate limits or error thresholds). |
+| `GOOGLE_SHEETS_WEBHOOK_URL` | Web App URL for the Apps Script (logs and syncs booked appointments in Google Sheets). |
+| `AUTOMATION_CRON_SECRET` | Secret to secure automation cron routes. |
 
-## Stack
+---
 
-- **App** — Next.js 16 (App Router), React 19, TypeScript, Tailwind v4.
-- **Data** — Supabase (Postgres + Auth + Storage + RLS).
-- **WhatsApp** — Meta Cloud API (official WhatsApp Business API).
+## 🚀 Quick Start Guide
 
-## Contributing
+### 1. Clone & Install Dependencies
+```bash
+git clone https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2.git
+cd WhatsApp-Automation-CRM-V2
+npm install
+```
 
-This is a template, not a collaborative product — the expected flow is
-fork → customise → deploy, **not** upstream contribution. Bug reports
-and security issues are welcome; feature PRs often belong in your fork
-rather than here. Details in
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) and
-[`.github/SECURITY.md`](./.github/SECURITY.md).
+### 2. Configure Your Database
+Run the SQL migration scripts located in [supabase/migrations](file:///e:/Full%20Stack%20Projects/WhatsApp-CRM-2/supabase/migrations) on your Supabase instance to set up all tables, relationships, and triggers:
+- Apply initial schema, pipelines, broadcasts, and automation engines.
+- Apply AI Healthcare schema and RLS policies (`013_ai_healthcare.sql` to `019_add_reminders_4h_2h.sql`).
 
-## License
+### 3. Run Locally
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application dashboard.
 
-[MIT](./LICENSE). Fork it, brand it, host it.
+---
+
+## 📂 Project Structure
+
+```
+├── docs/                      # Google Sheets apps scripts and offline documentation
+├── src/
+│   ├── app/                   # Next.js page layout and API routing
+│   │   ├── (auth)/            # Login, Registration, Password resets
+│   │   ├── (dashboard)/       # Dashboard, Shared Inbox, Contacts, Pipelines, Flows, AI Healthcare
+│   │   └── (marketing)/       # Landing and product marketing pages
+│   ├── components/            # Shared UI components and layout widgets
+│   ├── context/               # Global React context providers
+│   ├── hooks/                 # Reusable React hooks
+│   ├── lib/                   # Meta WhatsApp API helper functions, caching tools, and utilities
+│   ├── services/              # AI Healthcare processing services
+│   └── types/                 # TypeScript type declarations
+├── supabase/
+│   └── migrations/            # SQL database migration files
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](file:///e:/Full%20Stack%20Projects/WhatsApp-CRM-2/LICENSE) — feel free to customize, host, and white-label it for your own business or clients.

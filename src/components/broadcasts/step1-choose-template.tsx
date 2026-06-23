@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2, FileText, ArrowRight } from 'lucide-react';
 
 const categoryColors: Record<string, string> = {
-  Marketing: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  Utility: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  Marketing: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  Utility: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
   Authentication: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
 };
 

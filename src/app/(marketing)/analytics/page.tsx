@@ -15,7 +15,7 @@ export default function AnalyticsPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Cinematic Analytics <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Powering High Growth.
           </span>
         </h1>
@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
 
       {/* Analytics Main Graphic Box */}
       <div className="rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-8 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-950/5 via-cyan-950/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-950/5 via-teal-950/5 to-transparent pointer-events-none" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative z-10">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 uppercase tracking-wide">
@@ -79,16 +79,16 @@ export default function AnalyticsPage() {
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(6, 182, 212, 0.12)">
-          <Zap className="size-5 text-cyan-400 mb-3" />
+        <SpotlightCard glowColor="rgba(20, 184, 166, 0.12)">
+          <Zap className="size-5 text-teal-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">Agent Performance Timers</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             Review average response latency, deal resolution times, and team task completion metrics.
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(168, 85, 247, 0.12)">
-          <CheckCheck className="size-5 text-purple-400 mb-3" />
+        <SpotlightCard glowColor="rgba(16, 185, 129, 0.12)">
+          <CheckCheck className="size-5 text-emerald-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">SLA Auditing</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             Validate sending rates, templates delivery reliability, and message queues to align with service guarantees.

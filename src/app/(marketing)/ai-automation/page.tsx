@@ -24,7 +24,7 @@ export default function AIAutomationPage() {
           </div>
           <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.08]">
             Conversational AI <br />
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
               that Closes Deals.
             </span>
           </h1>
@@ -43,7 +43,7 @@ export default function AIAutomationPage() {
       {/* Models playground illustration */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center border-t border-[var(--m-border-primary)] pt-16">
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 uppercase tracking-wide">
+          <div className="inline-flex items-center gap-1 text-xs font-bold text-teal-400 uppercase tracking-wide">
             <Brain className="size-4" /> Agent Playground
           </div>
           <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--m-text-primary)] tracking-tight">
@@ -93,16 +93,16 @@ export default function AIAutomationPage() {
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(6, 182, 212, 0.12)">
-          <Brain className="size-5 text-cyan-400 mb-3" />
+        <SpotlightCard glowColor="rgba(20, 184, 166, 0.12)">
+          <Brain className="size-5 text-teal-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">Semantic Vector Sync</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             Sync your FAQs, product catalogs, and help center articles to vector stores so the agent always stays on-brand.
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(168, 85, 247, 0.12)">
-          <Bot className="size-5 text-purple-400 mb-3" />
+        <SpotlightCard glowColor="rgba(16, 185, 129, 0.12)">
+          <Bot className="size-5 text-emerald-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">Hybrid Human Hand-off</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             Agent seamlessly stops auto-replies when a human rep intervenes. Set triggers for instant human assistance alerts.

@@ -30,7 +30,7 @@ export default function ContactPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.08]">
           Let's Talk about <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Your WhatsApp Needs.
           </span>
         </h1>
@@ -42,10 +42,10 @@ export default function ContactPage() {
         <div className="space-y-3.5 border-t border-[var(--m-border-primary)] pt-6 mt-6">
           <div className="flex items-center gap-3.5 text-xs text-[var(--m-text-tertiary)]">
             <Mail className="size-4 text-emerald-400" />
-            <span>enterprise@wacrm.co</span>
+            <span>chatnexgenai@gmail.com</span>
           </div>
           <div className="flex items-center gap-3.5 text-xs text-[var(--m-text-tertiary)]">
-            <Building className="size-4 text-cyan-400" />
+            <Building className="size-4 text-teal-400" />
             <span>San Francisco Headquarters & Regional Servers</span>
           </div>
         </div>

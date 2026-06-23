@@ -312,14 +312,14 @@ export function WhatsAppConfig() {
         )}
 
         {/* Connection Status */}
-        <Alert className="bg-slate-900 border-slate-700">
+        <Alert className="bg-slate-900/40 border-slate-800">
           <div className="flex items-center gap-2">
             {connectionStatus === 'connected' ? (
               <CheckCircle2 className="size-4 text-primary" />
             ) : (
               <XCircle className="size-4 text-red-500" />
             )}
-            <AlertTitle className="text-white mb-0">
+            <AlertTitle className="text-slate-200 mb-0">
               {connectionStatus === 'connected' ? 'Connected' : 'Not Connected'}
             </AlertTitle>
           </div>
@@ -332,36 +332,34 @@ export function WhatsAppConfig() {
         </Alert>
 
         {/* API Credentials */}
-        <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+        <Card className="bg-slate-900/40 border-slate-800">
           <CardHeader>
-            <CardTitle className="text-white">API Credentials</CardTitle>
+            <CardTitle className="text-slate-200">API Credentials</CardTitle>
             <CardDescription className="text-slate-400">
               Enter your Meta WhatsApp Business API credentials.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-300">Phone Number ID</Label>
+              <Label className="text-slate-200">Phone Number ID</Label>
               <Input
                 placeholder="e.g. 100234567890123"
                 value={phoneNumberId}
                 onChange={(e) => setPhoneNumberId(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300">WhatsApp Business Account ID</Label>
+              <Label className="text-slate-200">WhatsApp Business Account ID</Label>
               <Input
                 placeholder="e.g. 100234567890456"
                 value={wabaId}
                 onChange={(e) => setWabaId(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300">Permanent Access Token</Label>
+              <Label className="text-slate-200">Permanent Access Token</Label>
               <div className="relative">
                 <Input
                   type={showToken ? 'text' : 'password'}
@@ -377,32 +375,31 @@ export function WhatsAppConfig() {
                       setTokenEdited(true);
                     }
                   }}
-                  className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 pr-10"
+                  className="pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowToken(!showToken)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
                   {showToken ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
               </div>
               {config && !tokenEdited && (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Token is hidden for security. Re-enter it to update configuration.
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300">Webhook Verify Token</Label>
+              <Label className="text-slate-200">Webhook Verify Token</Label>
               <Input
                 placeholder="Create a custom verify token"
                 value={verifyToken}
                 onChange={(e) => setVerifyToken(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 A custom string you create. Must match the token you set in Meta webhook settings.
               </p>
             </div>
@@ -410,27 +407,27 @@ export function WhatsAppConfig() {
         </Card>
 
         {/* Webhook URL */}
-        <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+        <Card className="bg-slate-900/40 border-slate-800">
           <CardHeader>
-            <CardTitle className="text-white">Webhook Configuration</CardTitle>
+            <CardTitle className="text-slate-200">Webhook Configuration</CardTitle>
             <CardDescription className="text-slate-400">
               Use this URL as your webhook callback in the Meta App Dashboard.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <Label className="text-slate-300">Webhook Callback URL</Label>
+              <Label className="text-slate-200">Webhook Callback URL</Label>
               <div className="flex gap-2">
                 <Input
                   readOnly
                   value={webhookUrl}
-                  className="bg-slate-800 border-slate-700 text-slate-300 font-mono text-sm"
+                  className="font-mono text-sm"
                 />
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={handleCopyWebhookUrl}
-                  className="shrink-0 border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
+                  className="shrink-0 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
                 >
                   <Copy className="size-4" />
                 </Button>
@@ -459,7 +456,7 @@ export function WhatsAppConfig() {
             variant="outline"
             onClick={handleTestConnection}
             disabled={testing || !config}
-            className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
+            className="border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
           >
             {testing ? (
               <>
@@ -478,7 +475,7 @@ export function WhatsAppConfig() {
               variant="outline"
               onClick={handleReset}
               disabled={resetting}
-              className="border-red-900 text-red-400 hover:text-red-300 hover:bg-red-950/40"
+              className="border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 dark:hover:text-red-300"
             >
               {resetting ? (
                 <>
@@ -498,17 +495,17 @@ export function WhatsAppConfig() {
 
       {/* Setup Instructions Sidebar */}
       <div>
-        <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+        <Card className="bg-slate-900/40 border-slate-800">
           <CardHeader>
-            <CardTitle className="text-white text-base">Setup Instructions</CardTitle>
+            <CardTitle className="text-slate-200 text-base">Setup Instructions</CardTitle>
             <CardDescription className="text-slate-400">
               Follow these steps to connect your WhatsApp Business API.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Accordion>
-              <AccordionItem className="border-slate-700">
-                <AccordionTrigger className="text-slate-300 hover:text-white hover:no-underline">
+              <AccordionItem className="border-slate-800">
+                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
                   <span className="flex items-center gap-2">
                     <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">1</span>
                     Create a Meta App
@@ -524,8 +521,8 @@ export function WhatsAppConfig() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem className="border-slate-700">
-                <AccordionTrigger className="text-slate-300 hover:text-white hover:no-underline">
+              <AccordionItem className="border-slate-800">
+                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
                   <span className="flex items-center gap-2">
                     <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">2</span>
                     Add WhatsApp Product
@@ -540,8 +537,8 @@ export function WhatsAppConfig() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem className="border-slate-700">
-                <AccordionTrigger className="text-slate-300 hover:text-white hover:no-underline">
+              <AccordionItem className="border-slate-800">
+                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
                   <span className="flex items-center gap-2">
                     <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">3</span>
                     Get API Credentials
@@ -557,8 +554,8 @@ export function WhatsAppConfig() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem className="border-slate-700">
-                <AccordionTrigger className="text-slate-300 hover:text-white hover:no-underline">
+              <AccordionItem className="border-slate-800">
+                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
                   <span className="flex items-center gap-2">
                     <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">4</span>
                     Configure Webhooks
@@ -576,7 +573,7 @@ export function WhatsAppConfig() {
               </AccordionItem>
             </Accordion>
 
-            <div className="mt-4 pt-4 border-t border-slate-700">
+            <div className="mt-4 pt-4 border-t border-slate-800">
               <a
                 href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started"
                 target="_blank"

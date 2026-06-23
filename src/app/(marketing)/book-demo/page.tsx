@@ -32,7 +32,7 @@ export default function BookDemoPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.08]">
           Book a 1-on-1 <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Product Walkthrough.
           </span>
         </h1>
@@ -47,7 +47,7 @@ export default function BookDemoPage() {
             <span>30-minute custom briefing</span>
           </div>
           <div className="flex items-center gap-3.5 text-xs text-[var(--m-text-tertiary)]">
-            <Video className="size-4 text-cyan-400" />
+            <Video className="size-4 text-teal-400" />
             <span>Live Zoom / Google Meet screen-share</span>
           </div>
         </div>

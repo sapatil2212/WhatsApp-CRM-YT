@@ -21,7 +21,7 @@ async function processReminders(db: any) {
       clinic:clinics(*)
     `)
     .eq('status', 'scheduled')
-    .or('reminder_24h_sent.eq.false,reminder_3h_sent.eq.false')
+    .or('reminder_24h_sent.eq.false,reminder_4h_sent.eq.false,reminder_2h_sent.eq.false')
 
   if (apptsError) {
     console.error('[Reminders Cron] Error fetching appointments:', apptsError)
@@ -52,16 +52,19 @@ async function processReminders(db: any) {
     if (diffHours <= 0) continue
 
     let send24h = false
-    let send3h = false
+    let send4h = false
+    let send2h = false
 
     // Decide which reminder to send
-    if (diffHours <= 3 && !appt.reminder_3h_sent) {
-      send3h = true
-    } else if (diffHours > 3 && diffHours <= 24 && !appt.reminder_24h_sent) {
+    if (diffHours <= 2.5 && !appt.reminder_2h_sent) {
+      send2h = true
+    } else if (diffHours > 2.5 && diffHours <= 5 && !appt.reminder_4h_sent) {
+      send4h = true
+    } else if (diffHours > 5 && diffHours <= 24 && !appt.reminder_24h_sent) {
       send24h = true
     }
 
-    if (!send24h && !send3h) continue
+    if (!send24h && !send4h && !send2h) continue
 
     // Resolve the clinic owner's user_id to query their WhatsApp configurations
     const clinicUserId = appt.clinic?.user_id
@@ -94,8 +97,10 @@ async function processReminders(db: any) {
     const specializationStr = appt.doctor?.specialization ? ` (${appt.doctor.specialization})` : ''
     
     let messageText = ''
-    if (send3h) {
-      messageText = `Reminder: You have an appointment scheduled with ${docName}${specializationStr} today at ${appt.appointment_time} (in 3 hours). We look forward to seeing you soon!`
+    if (send2h) {
+      messageText = `Reminder: You have an appointment scheduled with ${docName}${specializationStr} today at ${appt.appointment_time} (in 2 hours). We look forward to seeing you soon!`
+    } else if (send4h) {
+      messageText = `Reminder: You have an appointment scheduled with ${docName}${specializationStr} today at ${appt.appointment_time} (in 4 hours). We look forward to seeing you soon!`
     } else {
       const formattedDate = apptDateTime.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -106,21 +111,22 @@ async function processReminders(db: any) {
       messageText = `Reminder: You have an upcoming appointment scheduled with ${docName}${specializationStr} tomorrow, ${formattedDate} at ${appt.appointment_time}. Please reply to this message if you need to reschedule or cancel.`
     }
 
-    // Send the message (simulate in development/sandbox mode)
     let sentMessageId = ''
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[Reminders Cron] Development Sandbox: Simulating reminder message to ${sanitizedPhone}`)
-      sentMessageId = `sandbox-reminder-${send3h ? '3h' : '24h'}-${Date.now()}`
-    } else {
-      try {
-        const result = await sendTextMessage({
-          phoneNumberId,
-          accessToken,
-          to: sanitizedPhone,
-          text: messageText,
-        })
-        sentMessageId = result.messageId
-      } catch (err: any) {
+    try {
+      const result = await sendTextMessage({
+        phoneNumberId,
+        accessToken,
+        to: sanitizedPhone,
+        text: messageText,
+      })
+      sentMessageId = result.messageId
+    } catch (err: any) {
+      if (process.env.NODE_ENV === 'development') {
+        const msg = err.message || String(err)
+        console.warn(`[Reminders Cron] Dev mode error fallback for appointment ${appt.id}: ${msg}. Simulating success.`)
+        const kind = send2h ? '2h' : send4h ? '4h' : '24h'
+        sentMessageId = `sandbox-reminder-${kind}-${Date.now()}`
+      } else {
         console.error(`[Reminders Cron] Meta API call failed for appointment ${appt.id}:`, err.message || err)
         continue // Skip logging and database updates if sending failed
       }
@@ -182,9 +188,13 @@ async function processReminders(db: any) {
 
     // 4. Update the reminder flags on the appointment record
     const updates: Record<string, boolean> = {}
-    if (send3h) {
-      updates.reminder_3h_sent = true
-      updates.reminder_24h_sent = true // Mark both true so we don't try to send a 24h reminder in the future
+    if (send2h) {
+      updates.reminder_2h_sent = true
+      updates.reminder_4h_sent = true
+      updates.reminder_24h_sent = true // Mark all true so we don't try to send them in the future
+    } else if (send4h) {
+      updates.reminder_4h_sent = true
+      updates.reminder_24h_sent = true
     } else if (send24h) {
       updates.reminder_24h_sent = true
     }

@@ -64,6 +64,11 @@ export async function POST(request: Request) {
          * provided.
          */
         template_slug?: string
+        /**
+         * If set, duplicate an existing flow (owned by the same user)
+         * including all its nodes. Creates a new draft copy.
+         */
+        duplicate_from?: string
       }
     | null
   if (!body) {
@@ -113,6 +118,64 @@ export async function POST(request: Request) {
         // Roll back the parent flow so a half-cloned template doesn't
         // sit as an empty draft. CASCADE on flow_id removes the
         // (probably zero) nodes too.
+        await admin.from('flows').delete().eq('id', flow.id)
+        return NextResponse.json(
+          { error: nodesErr.message },
+          { status: 500 },
+        )
+      }
+    }
+    return NextResponse.json({ flow }, { status: 201 })
+  }
+
+  // -------- Duplicate existing flow path --------
+  if (body.duplicate_from) {
+    const { data: src, error: srcErr } = await admin
+      .from('flows')
+      .select('*')
+      .eq('id', body.duplicate_from)
+      .eq('user_id', userId)
+      .single()
+    if (srcErr || !src) {
+      return NextResponse.json(
+        { error: 'Source flow not found or not owned by you' },
+        { status: 404 },
+      )
+    }
+    const { data: flow, error: flowErr } = await admin
+      .from('flows')
+      .insert({
+        user_id: userId,
+        name: body.name?.trim() || `${src.name} (copy)`,
+        description: src.description,
+        status: 'draft',
+        trigger_type: body.trigger_type ?? src.trigger_type,
+        trigger_config: body.trigger_config ?? src.trigger_config,
+        entry_node_id: src.entry_node_id,
+      })
+      .select()
+      .single()
+    if (flowErr || !flow) {
+      return NextResponse.json(
+        { error: flowErr?.message ?? 'flow insert failed' },
+        { status: 500 },
+      )
+    }
+    // Copy nodes from source flow
+    const { data: srcNodes } = await admin
+      .from('flow_nodes')
+      .select('node_key, node_type, config')
+      .eq('flow_id', body.duplicate_from)
+    if (srcNodes && srcNodes.length > 0) {
+      const { error: nodesErr } = await admin.from('flow_nodes').insert(
+        srcNodes.map((n: { node_key: string; node_type: string; config: Record<string, unknown> }) => ({
+          flow_id: flow.id,
+          node_key: n.node_key,
+          node_type: n.node_type,
+          config: n.config,
+        })),
+      )
+      if (nodesErr) {
         await admin.from('flows').delete().eq('id', flow.id)
         return NextResponse.json(
           { error: nodesErr.message },

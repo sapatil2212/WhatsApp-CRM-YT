@@ -14,7 +14,7 @@ export default function AboutPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Humanizing Automated <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Conversational Sales.
           </span>
         </h1>
@@ -33,16 +33,16 @@ export default function AboutPage() {
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(6, 182, 212, 0.12)">
-          <Users className="size-5 text-cyan-400 mb-3" />
+        <SpotlightCard glowColor="rgba(20, 184, 166, 0.12)">
+          <Users className="size-5 text-teal-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">Collaborative Design</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             CRMs shouldn't be boring spreadsheets. We build clean, high-motion, visual boards that make managing relationships a joy.
           </p>
         </SpotlightCard>
 
-        <SpotlightCard glowColor="rgba(168, 85, 247, 0.12)">
-          <Award className="size-5 text-purple-400 mb-3" />
+        <SpotlightCard glowColor="rgba(16, 185, 129, 0.12)">
+          <Award className="size-5 text-emerald-400 mb-3" />
           <h4 className="text-sm font-bold text-[var(--m-text-secondary)]">Premium Standards</h4>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2 leading-relaxed">
             We focus on Apple-level polish, Stripe-level documentation, and rock-solid Meta API compliance.

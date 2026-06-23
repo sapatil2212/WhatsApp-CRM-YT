@@ -44,7 +44,7 @@ export default function CareersPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Build the Future of <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Conversational Commerce.
           </span>
         </h1>
@@ -80,7 +80,7 @@ export default function CareersPage() {
 
       {/* Speculative Application */}
       <div className="rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-8 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-cyan-950/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-teal-950/5 pointer-events-none" />
         <div className="max-w-2xl mx-auto text-center space-y-6 relative z-10">
           <h3 className="text-xl sm:text-2xl font-extrabold text-[var(--m-text-primary)]">Don't see your specific role?</h3>
           <p className="text-xs text-[var(--m-text-tertiary)] max-w-md mx-auto leading-relaxed">

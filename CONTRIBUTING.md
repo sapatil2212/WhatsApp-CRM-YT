@@ -16,10 +16,10 @@ opinions become yours.
 ## Fork and run
 
 ```bash
-# 1. Fork on GitHub: https://github.com/ArnasDon/wacrm → Fork
+# 1. Fork on GitHub: https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2 → Fork
 # 2. Clone your fork
-git clone https://github.com/<your-username>/wacrm.git
-cd wacrm
+git clone https://github.com/<your-username>/WhatsApp-Automation-CRM-V2.git
+cd WhatsApp-Automation-CRM-V2
 
 cp .env.local.example .env.local   # fill in Supabase + Meta creds
 npm install
@@ -34,7 +34,7 @@ Full setup (Supabase migrations, WhatsApp Business API, deploy) lives in
 Pull in upstream bug fixes and security patches periodically:
 
 ```bash
-git remote add upstream https://github.com/ArnasDon/wacrm.git  # once
+git remote add upstream https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2.git  # once
 git fetch upstream
 git checkout main
 git merge upstream/main     # or: git rebase upstream/main
@@ -50,7 +50,7 @@ updating on your schedule is a valid alternative.
 
 If you find a bug in the upstream code — not one you introduced in your
 fork — please file it using the
-[bug report](https://github.com/ArnasDon/wacrm/issues/new?template=bug_report.yml)
+[bug report](https://github.com/sapatil2212/WhatsApp-Automation-CRM-V2/issues)
 template. Including the commit SHA, the runtime (Hostinger / Vercel /
 local / other), and logs will get to a fix fastest.
 
@@ -95,8 +95,8 @@ closed — open the issue first to align.
 
 ## If you maintain a public fork
 
-- Rebrand. The "CRM Template for WhatsApp" name, favicon, and
-  `wacrm.tech` URL belong to the upstream project; please swap them
+- Rebrand. The "ChatNexGen Ai" name, favicon, and
+  associated domain URL belong to the project; please swap them
   for your own before putting your deployment in front of users.
 - Keep the MIT [`LICENSE`](./LICENSE) file — that's how the template's
   permissions travel with the code. Attribution in a `README` section

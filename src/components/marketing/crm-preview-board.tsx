@@ -17,8 +17,8 @@ interface CRMLead {
 
 export function CRMPreviewBoard() {
   const [leads, setLeads] = useState<CRMLead[]>([
-    { id: "1", name: "David Kim", company: "Zeta Scale", value: 1200, score: 94, avatarColor: "bg-cyan-500", stage: 0 },
-    { id: "2", name: "Elena Rostova", company: "Vostok D2C", value: 850, score: 88, avatarColor: "bg-purple-500", stage: 1 },
+    { id: "1", name: "David Kim", company: "Zeta Scale", value: 1200, score: 94, avatarColor: "bg-emerald-600", stage: 0 },
+    { id: "2", name: "Elena Rostova", company: "Vostok D2C", value: 850, score: 88, avatarColor: "bg-teal-500", stage: 1 },
     { id: "3", name: "Marcus Brody", company: "Indy Tech", value: 2400, score: 99, avatarColor: "bg-emerald-500", stage: 2 },
     { id: "4", name: "Sophia Martinez", company: "Alt Co", value: 3100, score: 97, avatarColor: "bg-amber-500", stage: 3 },
   ]);

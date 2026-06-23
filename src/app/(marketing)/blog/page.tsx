@@ -20,7 +20,7 @@ export default function BlogPage() {
       cat: "api",
       date: "May 18, 2026",
       read: "6 min read",
-      desc: "Understand high-quality template scores, opt-out triggers, and official Meta policies to keep your broadcast account active.",
+      desc: "Understand high-quality template scores, opt-out triggers, and official Meta policies to keep your business account active.",
     },
     {
       title: "How to Fine-tune LLM Context for Inbound Intent Classification",
@@ -42,7 +42,7 @@ export default function BlogPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Editorial Insights <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             for Modern Commerce.
           </span>
         </h1>

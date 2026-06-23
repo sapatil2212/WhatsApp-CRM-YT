@@ -48,9 +48,9 @@ const STEPS: Step[] = [
     label: "AI Qualifies Lead",
     sub: "Intent detection & scoring",
     icon: Bot,
-    color: "text-cyan-400",
-    glow: "rgba(6,182,212,0.35)",
-    borderActive: "border-cyan-500",
+    color: "text-emerald-400",
+    glow: "rgba(16,185,129,0.35)",
+    borderActive: "border-emerald-500",
     logLines: [
       "→ NLP intent: purchase_inquiry (0.94)",
       "→ Lead score: 82 / 100  [HIGH]",
@@ -62,9 +62,9 @@ const STEPS: Step[] = [
     label: "Auto Booking",
     sub: "Calendar slot reserved",
     icon: Calendar,
-    color: "text-purple-400",
-    glow: "rgba(168,85,247,0.35)",
-    borderActive: "border-purple-500",
+    color: "text-teal-400",
+    glow: "rgba(20,184,166,0.35)",
+    borderActive: "border-teal-500",
     logLines: [
       "→ Available slot: Thu 29 May · 10:00 AM",
       "→ Google Calendar event created",
@@ -154,7 +154,7 @@ export function WorkflowVisualizer() {
     <div className="w-full rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-glass)] backdrop-blur-md overflow-hidden shadow-[var(--m-shadow-card)]">
       {/* Top bar */}
       <div className="flex items-center gap-2 px-5 py-3 border-b border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/60">
-        <Zap className="size-3.5 text-cyan-400" />
+        <Zap className="size-3.5 text-teal-400" />
         <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--m-text-muted)]">
           Automation Engine · Live Run
         </span>

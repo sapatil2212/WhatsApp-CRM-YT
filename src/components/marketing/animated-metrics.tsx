@@ -87,7 +87,7 @@ export function AnimatedMetrics() {
       >
         <div className="flex items-center justify-between mb-4">
           <span className="text-xs uppercase font-bold text-[var(--m-text-tertiary)]">Broadcast Capacity</span>
-          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+          <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400">
             <Zap className="size-4" />
           </div>
         </div>
@@ -97,7 +97,7 @@ export function AnimatedMetrics() {
           </h3>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2">Millions of monthly triggered follow-ups, payment confirmations, & templates.</p>
         </div>
-        <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-cyan-500/5 blur-2xl" />
+        <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-teal-500/5 blur-2xl" />
       </motion.div>
 
       {/* Metric 3 */}
@@ -110,7 +110,7 @@ export function AnimatedMetrics() {
       >
         <div className="flex items-center justify-between mb-4">
           <span className="text-xs uppercase font-bold text-[var(--m-text-tertiary)]">AI Automation Rate</span>
-          <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
             <Sparkles className="size-4" />
           </div>
         </div>
@@ -120,7 +120,7 @@ export function AnimatedMetrics() {
           </h3>
           <p className="text-xs text-[var(--m-text-tertiary)] mt-2">Chat conversations handled completely autonomously without human intervention.</p>
         </div>
-        <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-purple-500/5 blur-2xl" />
+        <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-emerald-500/5 blur-2xl" />
       </motion.div>
     </div>
   );

@@ -26,14 +26,14 @@ export function FloatingNotification() {
       type: "crm",
       title: "Lead Routed to CRM",
       desc: "Assigned to Sarah Adams (Enterprise Sales)",
-      icon: <UserCheck className="size-4 text-cyan-400" />,
+      icon: <UserCheck className="size-4 text-teal-400" />,
     },
     {
       id: "3",
       type: "campaign",
       title: "Campaign Broadcast Complete",
       desc: "Delivered 12,450 templates (98.4% read rate)",
-      icon: <MessageSquare className="size-4 text-purple-400" />,
+      icon: <MessageSquare className="size-4 text-emerald-400" />,
     },
   ];
 

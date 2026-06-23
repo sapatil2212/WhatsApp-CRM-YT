@@ -814,11 +814,11 @@ export function MessageThread({
             className={cn(
               "inline-flex h-7 px-2 items-center justify-center gap-1 rounded-md text-xs transition-colors border",
               showSimulator
-                ? "bg-purple-500/10 border-purple-500/30 text-purple-300"
+                ? "bg-teal-500/10 border-teal-500/30 text-teal-300"
                 : "border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white"
             )}
           >
-            <Sparkles className="h-3 w-3 text-purple-400" />
+            <Sparkles className="h-3 w-3 text-teal-400" />
             <span className="hidden sm:inline">Simulate Patient</span>
           </button>
 
@@ -906,9 +906,9 @@ export function MessageThread({
 
       {/* Patient Message Simulator Bar */}
       {showSimulator && (
-        <div className="flex flex-col gap-2 border-b border-purple-500/20 bg-purple-500/10 px-4 py-2.5 shrink-0">
+        <div className="flex flex-col gap-2 border-b border-teal-500/20 bg-teal-500/10 px-4 py-2.5 shrink-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-purple-400 flex items-center gap-1.5">
+            <span className="text-xs font-semibold text-teal-400 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 animate-pulse" /> Patient Message Simulator
             </span>
             <button
@@ -927,7 +927,7 @@ export function MessageThread({
               value={simulatedText}
               onChange={(e) => setSimulatedText(e.target.value)}
               placeholder="Ask anything (e.g. 'Do you offer teeth whitening?' or 'What are your hours?')"
-              className="flex-1 rounded-md border border-purple-500/30 bg-slate-900/60 px-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-purple-500/50"
+              className="flex-1 rounded-md border border-teal-500/30 bg-slate-900/60 px-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-teal-500/50"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSimulateSubmit();
@@ -939,7 +939,7 @@ export function MessageThread({
               size="sm"
               onClick={handleSimulateSubmit}
               disabled={simulating || !simulatedText.trim()}
-              className="h-8 bg-purple-600 hover:bg-purple-500 text-white text-xs px-3"
+              className="h-8 bg-teal-600 hover:bg-teal-500 text-white text-xs px-3"
             >
               {simulating ? "Simulating..." : "Send as Patient"}
             </Button>

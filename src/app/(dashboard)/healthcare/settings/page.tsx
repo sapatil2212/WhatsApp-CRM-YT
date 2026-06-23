@@ -110,6 +110,10 @@ export default function AISettingsPage() {
       });
 
       if (error) throw error;
+
+      // Invalidate server-side AI cache so changes take effect immediately
+      await fetch("/api/healthcare/invalidate-cache", { method: "POST" }).catch(() => {});
+
       toast.success("AI Settings updated successfully!");
     } catch (err: any) {
       toast.error(`Error saving settings: ${err.message}`);

@@ -250,7 +250,7 @@ export default function BroadcastsPage() {
                       <RateCell
                         value={broadcast.read_count}
                         total={broadcast.total_recipients}
-                        color="bg-blue-500"
+                        color="bg-emerald-500"
                       />
                     </TableCell>
                     <TableCell>

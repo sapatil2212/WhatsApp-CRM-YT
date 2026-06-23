@@ -19,13 +19,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  ArrowDown,
+  ArrowUp,
   CircleCheck,
   CircleAlert,
+  Copy,
   History,
   Loader2,
   Plus,
   Save,
   Trash2,
+  Undo2,
+  Redo2,
   Workflow,
   ChevronDown,
   ChevronUp,
@@ -40,6 +45,7 @@ import {
   Inbox,
   GitFork,
   Tag,
+  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -118,7 +124,7 @@ const NODE_META: Record<
   send_message: {
     label: "Send message",
     icon: MessageCircle,
-    color: "text-sky-400",
+    color: "text-emerald-400",
   },
   send_buttons: {
     label: "Send buttons",
@@ -128,7 +134,7 @@ const NODE_META: Record<
   send_list: {
     label: "Send list",
     icon: ListPlus,
-    color: "text-indigo-400",
+    color: "text-teal-400",
   },
   collect_input: {
     label: "Collect input",
@@ -356,9 +362,50 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
   // status-only changes after the activate API succeeds use raw setState
   // so they don't falsely re-flag the form as dirty.
   const [dirty, setDirty] = useState(false);
+
+  // ── Undo / Redo history ────────────────────────────────────────────
+  const historyRef = useRef<{ past: BuilderState[]; future: BuilderState[] }>({
+    past: [],
+    future: [],
+  });
+  const MAX_HISTORY = 30;
+
   const setStateDirty = useCallback<typeof setState>((updaterOrValue) => {
     setDirty(true);
-    setState(updaterOrValue);
+    setState((prev) => {
+      const hist = historyRef.current;
+      hist.past = [...hist.past.slice(-(MAX_HISTORY - 1)), prev];
+      hist.future = []; // clear redo on new edit
+      const next =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(prev)
+          : updaterOrValue;
+      return next;
+    });
+  }, []);
+
+  const undo = useCallback(() => {
+    const hist = historyRef.current;
+    if (hist.past.length === 0) return;
+    const prev = hist.past[hist.past.length - 1];
+    hist.past = hist.past.slice(0, -1);
+    setState((cur) => {
+      hist.future = [cur, ...hist.future];
+      return prev;
+    });
+    setDirty(true);
+  }, []);
+
+  const redo = useCallback(() => {
+    const hist = historyRef.current;
+    if (hist.future.length === 0) return;
+    const next = hist.future[0];
+    hist.future = hist.future.slice(1);
+    setState((cur) => {
+      hist.past = [...hist.past, cur];
+      return next;
+    });
+    setDirty(true);
   }, []);
 
   // Used by jumpToNode() to scroll the target into view + flash its border.
@@ -381,6 +428,9 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
+
+  // handleSaveRef is assigned after handleSave is defined (below).
+  const handleSaveRef = useRef<(() => void) | null>(null);
 
   // ---- Validation ----
   const issues = useMemo<ValidationIssue[]>(
@@ -428,6 +478,28 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
       setSaving(false);
     }
   }, [initialFlow.id, state]);
+
+  // ── Ctrl+S save, Ctrl+Z undo, Ctrl+Y redo ─────────────────────────
+  handleSaveRef.current = handleSave;
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const ctrl = e.ctrlKey || e.metaKey;
+      if (ctrl && e.key === "s") {
+        e.preventDefault();
+        handleSaveRef.current?.();
+      }
+      if (ctrl && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+      if (ctrl && (e.key === "y" || (e.key === "z" && e.shiftKey))) {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [undo, redo]);
 
   // ---- Activate / Pause / Archive ----
   const handleStatus = useCallback(
@@ -492,10 +564,39 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
   // ---- Node helpers ----
   const updateNode = useCallback(
     (key: string, patch: Partial<BuilderNode>) => {
-      setStateDirty((s) => ({
-        ...s,
-        nodes: s.nodes.map((n) => (n.node_key === key ? { ...n, ...patch } : n)),
-      }));
+      setStateDirty((s) => {
+        const newKey = patch.node_key;
+        const keyChanged = newKey && newKey !== key;
+
+        const nodes = s.nodes.map((n) => {
+          // Apply the patch to the target node first.
+          const updated = n.node_key === key ? { ...n, ...patch } : n;
+
+          // If the node_key was renamed, rewrite every reference to the
+          // old key in all other nodes' configs so the graph stays valid.
+          if (!keyChanged || n.node_key === key) return updated;
+
+          const rewrite = (v: unknown): unknown => {
+            if (v === key) return newKey;
+            if (Array.isArray(v)) return v.map(rewrite);
+            if (v && typeof v === "object") {
+              return Object.fromEntries(
+                Object.entries(v as Record<string, unknown>).map(([k, val]) => [k, rewrite(val)]),
+              );
+            }
+            return v;
+          };
+          return { ...updated, config: rewrite(updated.config) as Record<string, unknown> };
+        });
+
+        return {
+          ...s,
+          nodes,
+          // Update entry_node_id if it pointed at the renamed node.
+          entry_node_id:
+            keyChanged && s.entry_node_id === key ? newKey : s.entry_node_id,
+        };
+      });
     },
     [setStateDirty],
   );
@@ -518,17 +619,32 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
       const base = slugify(meta.label, type);
       setStateDirty((s) => {
         const node_key = uniqueNodeKey(base, s.nodes);
-        const next: BuilderNode = {
+        const newNode: BuilderNode = {
           node_key,
           node_type: type,
           config: defaultConfigFor(type),
         };
+        // Auto-wire: if the last node has a single next_node_key that's
+        // empty, point it at this new node so the user doesn't have to
+        // manually connect every pair.
+        const nodes = [...s.nodes];
+        if (nodes.length > 0) {
+          const last = nodes[nodes.length - 1];
+          const autoWireTypes = ["start", "send_message", "collect_input", "set_tag"];
+          if (autoWireTypes.includes(last.node_type)) {
+            const cfg = last.config as { next_node_key?: string };
+            if (!cfg.next_node_key) {
+              nodes[nodes.length - 1] = {
+                ...last,
+                config: { ...last.config, next_node_key: node_key },
+              };
+            }
+          }
+        }
         setExpanded((prev) => new Set([...prev, node_key]));
         return {
           ...s,
-          nodes: [...s.nodes, next],
-          // If this is the first node and it's a start, pick it as
-          // the entry automatically. Saves a click.
+          nodes: [...nodes, newNode],
           entry_node_id:
             s.entry_node_id ??
             (type === "start" ? node_key : s.entry_node_id ?? null),
@@ -538,17 +654,107 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
     [setStateDirty],
   );
 
+  // Insert a node after a specific existing node (between two nodes).
+  const insertNodeAfter = useCallback(
+    (afterKey: string, type: NodeType) => {
+      const meta = NODE_META[type];
+      const base = slugify(meta.label, type);
+      setStateDirty((s) => {
+        const node_key = uniqueNodeKey(base, s.nodes);
+        const newNode: BuilderNode = {
+          node_key,
+          node_type: type,
+          config: defaultConfigFor(type),
+        };
+        const idx = s.nodes.findIndex((n) => n.node_key === afterKey);
+        if (idx === -1) return { ...s, nodes: [...s.nodes, newNode] };
+
+        const nodes = [...s.nodes];
+        // Auto-wire: point the previous node at the new node, and
+        // point the new node at whatever the previous node pointed to.
+        const prev = nodes[idx];
+        const autoWireTypes = ["start", "send_message", "collect_input", "set_tag"];
+        if (autoWireTypes.includes(prev.node_type)) {
+          const oldNext = (prev.config as { next_node_key?: string }).next_node_key || "";
+          nodes[idx] = { ...prev, config: { ...prev.config, next_node_key: node_key } };
+          if (autoWireTypes.includes(type)) {
+            newNode.config = { ...newNode.config, next_node_key: oldNext };
+          }
+        }
+
+        nodes.splice(idx + 1, 0, newNode);
+        setExpanded((p) => new Set([...p, node_key]));
+        return { ...s, nodes };
+      });
+    },
+    [setStateDirty],
+  );
+
   const removeNode = useCallback(
     (key: string) => {
-      setStateDirty((s) => ({
-        ...s,
-        nodes: s.nodes.filter((n) => n.node_key !== key),
-        entry_node_id: s.entry_node_id === key ? null : s.entry_node_id,
-      }));
+      setStateDirty((s) => {
+        // Null out any next_node_key references pointing to the removed node
+        // so no other node silently points into the void.
+        const clearRef = (v: unknown): unknown => {
+          if (v === key) return "";
+          if (Array.isArray(v)) return v.map(clearRef);
+          if (v && typeof v === "object") {
+            return Object.fromEntries(
+              Object.entries(v as Record<string, unknown>).map(([k, val]) => [k, clearRef(val)]),
+            );
+          }
+          return v;
+        };
+        return {
+          ...s,
+          nodes: s.nodes
+            .filter((n) => n.node_key !== key)
+            .map((n) => ({ ...n, config: clearRef(n.config) as Record<string, unknown> })),
+          entry_node_id: s.entry_node_id === key ? null : s.entry_node_id,
+        };
+      });
       setExpanded((prev) => {
         const next = new Set(prev);
         next.delete(key);
         return next;
+      });
+    },
+    [setStateDirty],
+  );
+
+  // Move a node up or down in the list.
+  const moveNode = useCallback(
+    (key: string, direction: "up" | "down") => {
+      setStateDirty((s) => {
+        const idx = s.nodes.findIndex((n) => n.node_key === key);
+        if (idx === -1) return s;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= s.nodes.length) return s;
+        const nodes = [...s.nodes];
+        [nodes[idx], nodes[targetIdx]] = [nodes[targetIdx], nodes[idx]];
+        return { ...s, nodes };
+      });
+    },
+    [setStateDirty],
+  );
+
+  // Duplicate a node with a fresh key.
+  const duplicateNode = useCallback(
+    (key: string) => {
+      setStateDirty((s) => {
+        const src = s.nodes.find((n) => n.node_key === key);
+        if (!src) return s;
+        const newKey = uniqueNodeKey(src.node_key, s.nodes);
+        const clone: BuilderNode = {
+          node_key: newKey,
+          node_type: src.node_type,
+          config: JSON.parse(JSON.stringify(src.config)),
+        };
+        const idx = s.nodes.findIndex((n) => n.node_key === key);
+        const nodes = [...s.nodes];
+        nodes.splice(idx + 1, 0, clone);
+        setExpanded((p) => new Set([...p, newKey]));
+        return { ...s, nodes };
       });
     },
     [setStateDirty],
@@ -608,6 +814,10 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
         canActivate={canActivate}
         onBack={() => router.push("/flows")}
         onViewRuns={() => router.push(`/flows/${initialFlow.id}/runs`)}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={historyRef.current.past.length > 0}
+        canRedo={historyRef.current.future.length > 0}
       />
 
       <TriggerPanel
@@ -618,8 +828,8 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
 
       <EntryPicker state={state} setState={setStateDirty} />
 
-      <section className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
+      <section className="flex flex-col gap-0">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold text-white">
             Nodes ({state.nodes.length})
           </h2>
@@ -628,31 +838,67 @@ export function FlowBuilder({ initialFlow, initialNodes }: FlowBuilderProps) {
 
         {state.nodes.length === 0 ? (
           <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/50 p-8 text-center text-sm text-slate-400">
-            Add a <strong>Start</strong> node, then a <strong>Send buttons</strong>
-            {" "}node, then a <strong>Handoff</strong> — that&apos;s the welcome-menu
-            shape from the brief.
+            <p className="mb-3">
+              Add a <strong>Start</strong> node, then a <strong>Send buttons</strong>
+              {" "}node, then a <strong>Handoff</strong> — that&apos;s the welcome-menu shape.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button size="sm" variant="outline" onClick={() => addNode("start")}>
+                <PlayCircle className="h-3.5 w-3.5 text-emerald-400" /> Start
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => addNode("send_buttons")}>
+                <ListChecks className="h-3.5 w-3.5 text-primary" /> Send buttons
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => addNode("handoff")}>
+                <UserPlus className="h-3.5 w-3.5 text-amber-400" /> Handoff
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => addNode("end")}>
+                <Flag className="h-3.5 w-3.5 text-slate-400" /> End
+              </Button>
+            </div>
           </div>
         ) : (
-          state.nodes.map((node) => (
-            <NodeCard
-              key={node.node_key}
-              node={node}
-              allNodes={state.nodes}
-              expanded={expanded.has(node.node_key)}
-              isEntry={state.entry_node_id === node.node_key}
-              isFlashed={flashedKey === node.node_key}
-              cardRef={setNodeRef(node.node_key)}
-              issues={issues.filter(
-                (i) => i.scope === "node" && i.node_key === node.node_key,
+          state.nodes.map((node, idx) => (
+            <div key={node.node_key}>
+              <NodeCard
+                node={node}
+                allNodes={state.nodes}
+                nodeIndex={idx}
+                nodeCount={state.nodes.length}
+                expanded={expanded.has(node.node_key)}
+                isEntry={state.entry_node_id === node.node_key}
+                isFlashed={flashedKey === node.node_key}
+                cardRef={setNodeRef(node.node_key)}
+                issues={issues.filter(
+                  (i) => i.scope === "node" && i.node_key === node.node_key,
+                )}
+                onToggle={() => toggleExpanded(node.node_key)}
+                onUpdate={(patch) => updateNode(node.node_key, patch)}
+                onUpdateConfig={(patch) => updateNodeConfig(node.node_key, patch)}
+                onRemove={() => removeNode(node.node_key)}
+                onSetEntry={() =>
+                  setStateDirty((s) => ({ ...s, entry_node_id: node.node_key }))
+                }
+                onMoveUp={() => moveNode(node.node_key, "up")}
+                onMoveDown={() => moveNode(node.node_key, "down")}
+                onDuplicate={() => duplicateNode(node.node_key)}
+              />
+              {/* Insert-between connector with add button */}
+              {idx < state.nodes.length - 1 && (
+                <InsertBetweenButton
+                  afterKey={node.node_key}
+                  nextKey={state.nodes[idx + 1]?.node_key}
+                  isConnected={(() => {
+                    const cfg = node.config as Record<string, unknown>;
+                    const nextKey = state.nodes[idx + 1]?.node_key;
+                    if (!nextKey) return false;
+                    if (cfg.next_node_key === nextKey) return true;
+                    return false;
+                  })()}
+                  onInsert={insertNodeAfter}
+                />
               )}
-              onToggle={() => toggleExpanded(node.node_key)}
-              onUpdate={(patch) => updateNode(node.node_key, patch)}
-              onUpdateConfig={(patch) => updateNodeConfig(node.node_key, patch)}
-              onRemove={() => removeNode(node.node_key)}
-              onSetEntry={() =>
-                setStateDirty((s) => ({ ...s, entry_node_id: node.node_key }))
-              }
-            />
+            </div>
           ))
         )}
       </section>
@@ -685,6 +931,10 @@ function Header({
   canActivate,
   onBack,
   onViewRuns,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
 }: {
   state: BuilderState;
   setState: React.Dispatch<React.SetStateAction<BuilderState>>;
@@ -697,6 +947,10 @@ function Header({
   canActivate: boolean;
   onBack: () => void;
   onViewRuns: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -734,6 +988,24 @@ function Header({
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="Undo (Ctrl+Z)"
+          >
+            <Undo2 className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRedo}
+            disabled={!canRedo}
+            title="Redo (Ctrl+Y)"
+          >
+            <Redo2 className="h-3.5 w-3.5" />
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -785,7 +1057,7 @@ function Header({
               Activate
             </Button>
           )}
-          <Button onClick={onSave} disabled={saving} size="sm">
+          <Button onClick={onSave} disabled={saving} size="sm" title="Save (Ctrl+S)">
             {saving ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
@@ -942,6 +1214,8 @@ function EntryPicker({
 function NodeCard({
   node,
   allNodes,
+  nodeIndex,
+  nodeCount,
   expanded,
   isEntry,
   isFlashed,
@@ -952,9 +1226,14 @@ function NodeCard({
   onUpdateConfig,
   onRemove,
   onSetEntry,
+  onMoveUp,
+  onMoveDown,
+  onDuplicate,
 }: {
   node: BuilderNode;
   allNodes: BuilderNode[];
+  nodeIndex: number;
+  nodeCount: number;
   expanded: boolean;
   isEntry: boolean;
   isFlashed: boolean;
@@ -965,6 +1244,9 @@ function NodeCard({
   onUpdateConfig: (patch: Record<string, unknown>) => void;
   onRemove: () => void;
   onSetEntry: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onDuplicate: () => void;
 }) {
   const meta = NODE_META[node.node_type];
   const hasError = issues.some((i) => i.severity === "error");
@@ -1012,6 +1294,18 @@ function NodeCard({
             </p>
           )}
         </div>
+        {/* Quick-glance wiring indicator for single-outbound nodes */}
+        {!expanded && (() => {
+          const cfg = node.config as Record<string, unknown>;
+          const nextKey = typeof cfg.next_node_key === "string" ? cfg.next_node_key : null;
+          if (!nextKey) return null;
+          return (
+            <span className="hidden items-center gap-1 text-[10px] text-slate-500 sm:inline-flex">
+              <CornerDownRight className="h-3 w-3" />
+              {nextKey}
+            </span>
+          );
+        })()}
         {hasError && (
           <CircleAlert className="h-3.5 w-3.5 shrink-0 text-red-400" />
         )}
@@ -1030,12 +1324,33 @@ function NodeCard({
             onUpdateConfig={onUpdateConfig}
           />
           <div className="mt-4 flex items-center justify-between border-t border-slate-800 pt-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {!isEntry && (
                 <Button variant="ghost" size="sm" onClick={onSetEntry}>
                   Set as entry
                 </Button>
               )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onMoveUp}
+                disabled={nodeIndex === 0}
+                title="Move up"
+              >
+                <ArrowUp className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onMoveDown}
+                disabled={nodeIndex === nodeCount - 1}
+                title="Move down"
+              >
+                <ArrowDown className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={onDuplicate} title="Duplicate">
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
             </div>
             <Button
               variant="ghost"
@@ -1044,7 +1359,7 @@ function NodeCard({
               className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
             >
               <Trash2 className="h-3.5 w-3.5" />
-              Remove node
+              Remove
             </Button>
           </div>
           {issues.length > 0 && (
@@ -1997,20 +2312,91 @@ function NodeKeySelect({
 }
 
 // ============================================================
-// Add-node menu
+// Insert-between connector button
 // ============================================================
 
-function AddNodeButton({ onAdd }: { onAdd: (type: NodeType) => void }) {
+function InsertBetweenButton({
+  afterKey,
+  nextKey,
+  isConnected,
+  onInsert,
+}: {
+  afterKey: string;
+  nextKey?: string;
+  isConnected: boolean;
+  onInsert: (afterKey: string, type: NodeType) => void;
+}) {
   const types: NodeType[] = [
-    "start",
+    "send_message",
     "send_buttons",
     "send_list",
-    "send_message",
     "collect_input",
     "condition",
     "set_tag",
     "handoff",
     "end",
+  ];
+  return (
+    <div className="group relative flex items-center justify-center py-1">
+      {/* Connection line */}
+      <div
+        className={cn(
+          "absolute left-1/2 top-0 h-full w-px -translate-x-1/2",
+          isConnected ? "bg-emerald-600/50" : "bg-slate-700/50",
+        )}
+      />
+      {/* Connection indicator */}
+      {isConnected && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[8px] font-medium text-emerald-500/70 opacity-0 transition-opacity group-hover:opacity-100">
+          <ArrowDown className="h-3 w-3" />
+        </div>
+      )}
+      {/* Insert button (shows on hover) */}
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className="relative z-10 mx-2 inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400 opacity-40 transition-all hover:border-primary hover:bg-primary/10 hover:text-primary hover:opacity-100 group-hover:opacity-100"
+          aria-label="Insert node here"
+        >
+          <Plus className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" className="border-slate-700 bg-slate-900">
+          {types.map((t) => {
+            const meta = NODE_META[t];
+            return (
+              <DropdownMenuItem key={t} onClick={() => onInsert(afterKey, t)}>
+                <meta.icon className={cn("h-3.5 w-3.5", meta.color)} />
+                {meta.label}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
+
+// ============================================================
+// Add-node menu
+// ============================================================
+
+const NODE_DESCRIPTIONS: Record<NodeType, string> = {
+  start: "Entry point of the flow",
+  send_message: "Send a text message",
+  send_buttons: "Message with up to 3 reply buttons",
+  send_list: "Interactive list menu (up to 10 options)",
+  collect_input: "Ask a question and store the answer",
+  condition: "Branch based on a variable or tag",
+  set_tag: "Add or remove a contact tag",
+  handoff: "Transfer to a human agent",
+  end: "End the flow",
+};
+
+function AddNodeButton({ onAdd }: { onAdd: (type: NodeType) => void }) {
+  const categories: { label: string; types: NodeType[] }[] = [
+    { label: "Flow control", types: ["start", "condition", "end"] },
+    { label: "Messages", types: ["send_message", "send_buttons", "send_list"] },
+    { label: "Data", types: ["collect_input", "set_tag"] },
+    { label: "Actions", types: ["handoff"] },
   ];
   return (
     <DropdownMenu>
@@ -2021,16 +2407,32 @@ function AddNodeButton({ onAdd }: { onAdd: (type: NodeType) => void }) {
         <Plus className="h-3.5 w-3.5" />
         Add node
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="border-slate-700 bg-slate-900">
-        {types.map((t) => {
-          const meta = NODE_META[t];
-          return (
-            <DropdownMenuItem key={t} onClick={() => onAdd(t)}>
-              <meta.icon className={cn("h-3.5 w-3.5", meta.color)} />
-              {meta.label}
-            </DropdownMenuItem>
-          );
-        })}
+      <DropdownMenuContent align="end" className="w-64 border-slate-700 bg-slate-900">
+        {categories.map((cat) => (
+          <div key={cat.label}>
+            <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              {cat.label}
+            </div>
+            {cat.types.map((t) => {
+              const meta = NODE_META[t];
+              return (
+                <DropdownMenuItem
+                  key={t}
+                  onClick={() => onAdd(t)}
+                  className="flex flex-col items-start gap-0 py-1.5"
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    <meta.icon className={cn("h-3.5 w-3.5", meta.color)} />
+                    {meta.label}
+                  </span>
+                  <span className="ml-5 text-[10px] text-slate-500">
+                    {NODE_DESCRIPTIONS[t]}
+                  </span>
+                </DropdownMenuItem>
+              );
+            })}
+          </div>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -35,14 +35,14 @@ export default function IntegrationsPage() {
       category: "dev",
       desc: "Subscribe to live JSON payloads for delivered texts, template read confirmations, and incoming chat threads.",
       logo: "W",
-      color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      color: "text-teal-400 bg-teal-500/10 border-teal-500/20",
     },
     {
       name: "Salesforce",
       category: "crm",
       desc: "Enterprise-grade contact synchronizations. Route high-value leads directly to dedicated account executives.",
       logo: "SF",
-      color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     },
     {
       name: "Slack Notifications",
@@ -68,7 +68,7 @@ export default function IntegrationsPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Connected to Your <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Existing Stack.
           </span>
         </h1>

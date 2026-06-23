@@ -14,12 +14,12 @@ export default function EnterprisePage() {
     {
       title: "SAML SSO & Roles",
       desc: "Configure standard directory syncs (Okta, Azure AD). Control agent access with strict permission policies.",
-      icon: <Shield className="size-5 text-cyan-400" />,
+      icon: <Shield className="size-5 text-teal-400" />,
     },
     {
       title: "Dedicated Models",
       desc: "Fine-tune customized LLM weight layers on your proprietary historical conversation logs. Keep memory safe and private.",
-      icon: <Sparkles className="size-5 text-purple-400" />,
+      icon: <Sparkles className="size-5 text-emerald-400" />,
     },
   ];
 
@@ -32,7 +32,7 @@ export default function EnterprisePage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Scale Conversations <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             with Global Safety.
           </span>
         </h1>
@@ -56,7 +56,7 @@ export default function EnterprisePage() {
 
       {/* SLA guarantees bar */}
       <div className="rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-8 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-cyan-950/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-teal-950/5 pointer-events-none" />
         <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div className="space-y-2">
             <span className="text-[10px] uppercase font-bold text-emerald-400">Guaranteed Service Levels</span>

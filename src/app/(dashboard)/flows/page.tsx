@@ -16,6 +16,8 @@ import {
   HelpCircle,
   UserPlus,
   FileText,
+  Copy,
+  Zap,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -172,6 +174,28 @@ export default function FlowsPage() {
     }
   }
 
+  async function handleDuplicate(flow: FlowRow) {
+    try {
+      const res = await fetch("/api/flows", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${flow.name} (copy)`,
+          trigger_type: flow.trigger_type,
+          trigger_config: flow.trigger_config,
+          duplicate_from: flow.id,
+        }),
+      });
+      if (!res.ok) throw new Error(`Duplicate failed: ${res.status}`);
+      const json = (await res.json()) as { flow: FlowRow };
+      setFlows((prev) => [json.flow, ...prev]);
+      toast.success("Flow duplicated.");
+    } catch (err) {
+      console.error(err);
+      toast.error("Couldn't duplicate flow.");
+    }
+  }
+
   async function handleDelete(flow: FlowRow) {
     const yes = window.confirm(
       `Delete "${flow.name}"? Any active runs will end immediately.`,
@@ -218,7 +242,12 @@ export default function FlowsPage() {
       </header>
 
       {flows.length === 0 ? (
-        <EmptyState onCreate={() => setCreateOpen(true)} />
+        <EmptyState
+          onCreate={() => setCreateOpen(true)}
+          templates={templates}
+          onUseTemplate={handleUseTemplate}
+          creating={creating}
+        />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {flows.map((flow) => (
@@ -227,6 +256,7 @@ export default function FlowsPage() {
               flow={flow}
               onEdit={() => router.push(`/flows/${flow.id}`)}
               onDelete={() => handleDelete(flow)}
+              onDuplicate={() => handleDuplicate(flow)}
             />
           ))}
         </div>
@@ -312,9 +342,19 @@ export default function FlowsPage() {
   );
 }
 
-function EmptyState({ onCreate }: { onCreate: () => void }) {
+function EmptyState({
+  onCreate,
+  templates,
+  onUseTemplate,
+  creating,
+}: {
+  onCreate: () => void;
+  templates: TemplateSummary[];
+  onUseTemplate: (slug: string) => void;
+  creating: boolean;
+}) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-700 bg-slate-900/50 px-6 py-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-700 bg-slate-900/50 px-6 py-12 text-center">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-800">
         <Workflow className="h-6 w-6 text-slate-500" />
       </div>
@@ -326,10 +366,44 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         bot. Customers tap buttons; the bot routes them to the right answer (or
         the right agent).
       </p>
-      <Button onClick={onCreate} className="mt-5">
-        <Plus className="h-4 w-4" />
-        Create your first flow
-      </Button>
+
+      {templates.length > 0 && (
+        <div className="mt-6 w-full max-w-2xl">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">
+            <Zap className="mr-1 inline h-3 w-3" />
+            Quick start from a template
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {templates.map((t) => {
+              const Icon = TEMPLATE_ICONS[t.icon] ?? FileText;
+              return (
+                <button
+                  key={t.slug}
+                  type="button"
+                  onClick={() => onUseTemplate(t.slug)}
+                  disabled={creating}
+                  className="flex flex-col items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 p-4 text-center transition-colors hover:border-primary/40 hover:bg-slate-800 disabled:opacity-50"
+                >
+                  <Icon className="h-5 w-5 text-primary" />
+                  <span className="text-xs font-semibold text-white">
+                    {t.name}
+                  </span>
+                  <span className="text-[10px] text-slate-500">
+                    {t.node_count} nodes
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-5 flex items-center gap-2">
+        <Button onClick={onCreate}>
+          <Plus className="h-4 w-4" />
+          Create blank flow
+        </Button>
+      </div>
     </div>
   );
 }
@@ -338,10 +412,12 @@ function FlowCard({
   flow,
   onEdit,
   onDelete,
+  onDuplicate,
 }: {
   flow: FlowRow;
   onEdit: () => void;
   onDelete: () => void;
+  onDuplicate: () => void;
 }) {
   const triggerSummary = describeTrigger(flow);
   const StatusIcon =
@@ -387,6 +463,9 @@ function FlowCard({
           <Pencil className="h-3.5 w-3.5" />
           Edit
         </Button>
+        <Button variant="ghost" size="sm" onClick={onDuplicate} title="Duplicate flow">
+          <Copy className="h-3.5 w-3.5" />
+        </Button>
         <Button
           variant="ghost"
           size="sm"
@@ -394,7 +473,6 @@ function FlowCard({
           className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
         >
           <Trash2 className="h-3.5 w-3.5" />
-          Delete
         </Button>
       </div>
     </div>

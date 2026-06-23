@@ -2,8 +2,12 @@
 
 import React from "react";
 import { Bot, Sparkles } from "lucide-react";
+import { useMarketingTheme } from "@/components/marketing/marketing-theme-provider";
 
 export function ReferenceDashboard() {
+  const { resolvedTheme } = useMarketingTheme();
+  const isLight = resolvedTheme === "light";
+
   return (
     <div className="relative w-full max-w-5xl mx-auto mt-0 px-4 md:px-0">
       {/* Background Glow Effect behind Dashboard */}
@@ -23,14 +27,11 @@ export function ReferenceDashboard() {
         >
           {/* Logo on Left */}
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <Bot className="size-3.5" />
-            </div>
-            <span
-              className="text-xs font-bold tracking-tight flex items-center gap-1 transition-colors text-[var(--m-text-heading)]"
-            >
-              wacrm <Sparkles className="size-2 text-emerald-400" />
-            </span>
+            <img
+              src={isLight ? "/images/logo/chatnexgen-logo-light.png" : "/images/logo/chatnexgen-logo.png"}
+              alt="ChatNexGen Ai Logo"
+              className="h-6 w-auto object-contain"
+            />
           </div>
 
           {/* Search/Pill in Center */}
@@ -80,8 +81,8 @@ export function ReferenceDashboard() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { w: "w-20", accent: "bg-emerald-500/20" },
-                { w: "w-16", accent: "bg-blue-500/20" },
-                { w: "w-24", accent: "bg-purple-500/20" },
+                { w: "w-16", accent: "bg-teal-500/20" },
+                { w: "w-24", accent: "bg-emerald-500/30" },
                 { w: "w-18", accent: "bg-amber-500/20" },
               ].map((card, i) => (
                 <div
@@ -110,7 +111,7 @@ export function ReferenceDashboard() {
                 </div>
               </div>
               <div className="col-span-2 rounded-xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300">
-                <div className="w-16 h-16 rounded-full border-4 border-[var(--m-bg-tertiary)] border-t-emerald-500/60 border-r-blue-500/40" />
+                <div className="w-16 h-16 rounded-full border-4 border-[var(--m-bg-tertiary)] border-t-emerald-500/60 border-r-teal-500/40" />
                 <div className="w-20 h-2 rounded bg-[var(--m-bg-tertiary)]" />
               </div>
             </div>

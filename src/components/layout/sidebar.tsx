@@ -6,12 +6,12 @@ import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useTotalUnread } from "@/hooks/use-total-unread";
+import { useTheme } from "@/hooks/use-theme";
 import {
   LayoutDashboard,
   MessageSquare,
   Users,
   GitBranch,
-  Radio,
   Zap,
   Workflow,
   Settings,
@@ -26,6 +26,8 @@ import {
   Brain,
   History,
   Calendar,
+  Shield,
+  Briefcase,
 } from "lucide-react";
 import {
   Avatar,
@@ -56,9 +58,8 @@ const navItems: NavItem[] = [
   { href: "/inbox", label: "Inbox", icon: MessageSquare },
   { href: "/contacts", label: "Contacts", icon: Users },
   { href: "/pipelines", label: "Pipelines", icon: GitBranch },
-  { href: "/broadcasts", label: "Broadcasts", icon: Radio },
   { href: "/automations", label: "Automations", icon: Zap },
-  { href: "/flows", label: "Flows", icon: Workflow, beta: true },
+  { href: "/flows", label: "Flows", icon: Workflow },
 ];
 
 const healthcareNavItems: NavItem[] = [
@@ -86,6 +87,8 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { profile, signOut } = useAuth();
   const totalUnread = useTotalUnread();
+  const { mode } = useTheme();
+  const isLight = mode === "light";
 
   // Close the drawer when route changes — users opened it to navigate,
   // so once they pick a destination the drawer should get out of the way.
@@ -143,12 +146,11 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
             close button is hidden since the sidebar is always-visible. */}
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sidebar-border px-4">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <MessageSquare className="h-4 w-4" />
-            </div>
-            <span className="text-sm font-semibold text-sidebar-foreground">
-              CRM for WhatsApp
-            </span>
+            <img
+              src={isLight ? "/images/logo/chatnexgen-logo-light.png" : "/images/logo/chatnexgen-logo.png"}
+              alt="ChatNexGen Ai Logo"
+              className="h-8 w-auto object-contain"
+            />
           </Link>
           <button
             type="button"
@@ -236,6 +238,45 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
               );
             })}
           </ul>
+
+          {profile?.role === "admin" && (
+            <>
+              <div className="my-4 border-t border-sidebar-border" />
+              <div className="px-3 mb-2 text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider">
+                Admin Panel
+              </div>
+              <ul className="flex flex-col gap-1">
+                <li>
+                  <Link
+                    href="/admin"
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors lg:py-2",
+                      pathname === "/admin"
+                        ? "bg-primary/10 text-primary"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    )}
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span className="flex-1">Clients Overview</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin/portfolio"
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors lg:py-2",
+                      pathname.startsWith("/admin/portfolio")
+                        ? "bg-primary/10 text-primary"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    )}
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    <span className="flex-1">Portfolio Showcase</span>
+                  </Link>
+                </li>
+              </ul>
+            </>
+          )}
 
           <div className="my-4 border-t border-sidebar-border" />
 

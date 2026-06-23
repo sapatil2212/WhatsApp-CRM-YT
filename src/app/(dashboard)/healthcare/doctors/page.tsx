@@ -657,7 +657,7 @@ export default function DoctorsManagement() {
                                   weekly[activeSlotDay] = daySlots;
                                   setForm({ ...form, weekly_slots: weekly });
                                 }}
-                                className="bg-slate-950 border-slate-855 text-white text-xs h-7 px-1.5 w-20"
+                                className="bg-slate-950 border-slate-800 text-white text-xs h-7 px-1.5 w-20"
                               />
                               <span className="text-slate-600 text-xs">-</span>
                               <Input
@@ -670,7 +670,7 @@ export default function DoctorsManagement() {
                                   weekly[activeSlotDay] = daySlots;
                                   setForm({ ...form, weekly_slots: weekly });
                                 }}
-                                className="bg-slate-950 border-slate-855 text-white text-xs h-7 px-1.5 w-20"
+                                className="bg-slate-950 border-slate-800 text-white text-xs h-7 px-1.5 w-20"
                               />
                               <Switch
                                 checked={slot.is_active}

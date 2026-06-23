@@ -1,231 +1,219 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { Check, HelpCircle, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { Check, HelpCircle, Sparkles, X } from "lucide-react";
 import { SpotlightCard } from "@/components/marketing/spotlight-card";
 import { MagneticButton } from "@/components/marketing/magnetic-button";
+import { BookDemoTrigger } from "@/components/marketing/book-demo-trigger";
 
 export default function PricingPage() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
-  const [agents, setAgents] = useState(5);
-  const [volume, setVolume] = useState(20000); // 20k messages
-
-  // Price calculations
-  const isYearly = billingCycle === "yearly";
-  const basePrices = {
-    starter: isYearly ? 39 : 49,
-    pro: isYearly ? 79 : 99,
-    growth: isYearly ? 159 : 199,
-  };
-
-  // ROI Calculator Calculations
-  // Estimated manual hours saved: 1 hour per 50 messages handled by AI (assume 80% AI handling)
-  const hoursSaved = Math.round((volume * 0.8) / 50);
-  // Estimate labor cost saved (assume $25/hour average agent cost)
-  const savings = hoursSaved * 25;
-  // Estimate pipeline conversion increase (assume 1.5% extra closes, average ticket $150)
-  const conversionIncrease = Math.round(volume * 0.015 * 150);
-
-  const tiers = [
+  const plans = [
     {
       name: "Starter",
-      desc: "For growing SMB teams testing automated chat marketing.",
-      price: basePrices.starter,
-      features: [
-        "1 WhatsApp Business Number",
-        "3 Shared Inbox Agents included",
-        "Up to 5,000 Messages / month",
-        "Standard AI Auto-Responder",
-        "Basic Contact Segmentation",
-        "Web + Mobile App Access",
-      ],
-      cta: "Start Free Trial",
+      tagline: "Full control. You run it.",
+      price: "₹2,999",
+      subtext: "/WABA/month",
+      setupFee: "No setup fee",
+      ctaText: "Get Started",
+      ctaLink: "/login",
+      ctaType: "link",
       popular: false,
+      footerText: "Access provisioned within 24 hours of payment."
     },
     {
-      name: "Professional",
-      desc: "For mid-market sales teams scaling client qualification.",
-      price: basePrices.pro,
-      features: [
-        "2 WhatsApp Business Numbers",
-        "10 Shared Inbox Agents included",
-        "Up to 25,000 Messages / month",
-        "Advanced Intent-Based AI Agent",
-        "Custom Rules & Webhooks",
-        "Zapier & CRM native integrations",
-        "99.9% Deliverability SLA",
-      ],
-      cta: "Get Professional",
+      name: "Growth",
+      tagline: "We launch you. You own it.",
+      price: "₹9,999",
+      subtext: "for first month",
+      setupFee: "₹2,999 /WABA/month after",
+      ctaText: "Book a Call",
+      ctaType: "trigger",
       popular: true,
+      badge: "Recommended • Done For You",
+      footerText: "Onboarding begins within 48 hours. Setup complete within 7 days."
     },
     {
-      name: "Scale & Growth",
-      desc: "For enterprise brands automating heavy outbound volume.",
-      price: basePrices.growth,
-      features: [
-        "Unlimited WhatsApp Numbers",
-        "Unlimited Shared Inbox Agents",
-        "Up to 100,000 Messages / month",
-        "Custom Fine-tuned LLM Agents",
-        "Dedicated Database / Region",
-        "SAML/SSO & Audit logs",
-        "Dedicated Account Manager",
-      ],
-      cta: "Get Growth Tier",
+      name: "Managed",
+      tagline: "We run it. You check results.",
+      price: "₹29,999",
+      subtext: "for first month",
+      setupFee: "₹2,999 /WABA/month after",
+      ctaText: "Book a Call",
+      ctaType: "trigger",
       popular: false,
-    },
+      badge: "Done For You",
+      footerText: "Application required. Pilot month available — ask us."
+    }
   ];
 
+  const features = {
+    platform: {
+      title: "The Platform",
+      rows: [
+        { name: "No-Code Automation Builder", starter: "check", growth: "check", managed: "check" },
+        { name: "AI Assistant (trained on your docs)", starter: "DIY", growth: "DIY", managed: "We configure it" },
+        { name: "Shared Team Inbox", starter: "check", growth: "check", managed: "check" },
+        { name: "27+ Integrations", starter: "check", growth: "check", managed: "check" },
+        { name: "0% Message Markup", starter: "check", growth: "check", managed: "check" },
+        { name: "Click-to-WhatsApp Ads (CTWA)", starter: "check", growth: "check", managed: "check" }
+      ]
+    },
+    setup: {
+      title: "Setup & Onboarding",
+      rows: [
+        { name: "Meta Business Verification", starter: "DIY", growth: "DIY", managed: "check" },
+        { name: "WhatsApp Number Connection", starter: "DIY", growth: "check", managed: "check" },
+        { name: "WhatsApp Co-existence Setup", starter: "DIY", growth: "check", managed: "check" },
+        { name: "Platform Configuration & Team Access", starter: "DIY", growth: "check", managed: "check" },
+        { name: "Kickoff Meeting", starter: "DIY", growth: "check", managed: "check" },
+        { name: "Automations Built For You", starter: "DIY", growth: "DIY", managed: "2–3 core automations" },
+        { name: "Message Templates Written & Submitted", starter: "DIY", growth: "DIY", managed: "check" },
+        { name: "Integrations Wired In", starter: "DIY", growth: "DIY", managed: "check" }
+      ]
+    },
+    support: {
+      title: "Support & Strategy",
+      rows: [
+        { name: "Priority WhatsApp Support Group", starter: "check", growth: "check", managed: "check" },
+        { name: "Monthly Group Q&A with Lakshit", starter: "check", growth: "check", managed: "check" },
+        { name: "1-on-1 Strategy Call", starter: "DIY", growth: "Onboarding call included", managed: "Monthly deep-dive (60 min)" },
+        { name: "Meta Template Fast-Track Approvals", starter: "DIY", growth: "DIY", managed: "check" },
+        { name: "Dedicated Account Manager", starter: "DIY", growth: "DIY", managed: "check" }
+      ]
+    }
+  };
+
+  const renderValue = (val: string) => {
+    if (val === "check") {
+      return (
+        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400">
+          <Check className="size-3.5" />
+        </span>
+      );
+    }
+    if (val === "DIY") {
+      return <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[var(--m-text-tertiary)]">DIY</span>;
+    }
+    return <span className="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">{val}</span>;
+  };
+
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 space-y-20">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-20 space-y-24">
       {/* Page Header */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/25 bg-[var(--m-badge-bg)] text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
-          <Sparkles className="size-3" /> transparent pricing
+          <Sparkles className="size-3" /> pricing
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
-          Flexible Pricing <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-            Built for Hyper-Growth.
+          Pricing <br />
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+            One platform. Three ways to get started.
           </span>
         </h1>
         <p className="text-sm text-[var(--m-text-tertiary)] max-w-xl mx-auto">
-          Start for free, upgrade as you grow. Fully compliant with official Meta API policies.
+          After setup, every plan is ₹2,999/WABA/month — flat. The difference is how much help you get on day one. You choose your level of support.
         </p>
       </div>
 
-      {/* Billing Cycle Toggle */}
-      <div className="flex items-center justify-center gap-4">
-        <span className={billingCycle === "monthly" ? "text-[var(--m-text-secondary)] font-semibold text-xs" : "text-[var(--m-text-muted)] text-xs"}>
-          Billed Monthly
-        </span>
-        <button
-          onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-          className="relative w-11 h-6 bg-[var(--m-bg-secondary)] border border-[var(--m-border-primary)] rounded-full flex items-center p-0.5 cursor-pointer"
-        >
-          <div
-            className={`w-4.5 h-4.5 bg-emerald-500 rounded-full transition-transform duration-300 ${
-              billingCycle === "yearly" ? "translate-x-5" : "translate-x-0"
-            }`}
-          />
-        </button>
-        <span className={billingCycle === "yearly" ? "text-[var(--m-text-secondary)] font-semibold text-xs flex items-center gap-1.5" : "text-[var(--m-text-muted)] text-xs flex items-center gap-1.5"}>
-          Billed Annually <span className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold">SAVE 20%</span>
-        </span>
-      </div>
-
-      {/* Pricing Cards Grid */}
+      {/* Plan Selection Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {tiers.map((tier) => (
+        {plans.map((plan) => (
           <SpotlightCard
-            key={tier.name}
+            key={plan.name}
             interactive={true}
-            className={tier.popular ? "border-emerald-500/50 shadow-lg shadow-emerald-950/5 relative" : "border-[var(--m-border-primary)]/80"}
-            glowColor={tier.popular ? "rgba(16, 185, 129, 0.18)" : "rgba(148, 163, 184, 0.1)"}
+            className={plan.popular ? "border-emerald-500/50 shadow-lg shadow-emerald-950/5 relative" : "border-[var(--m-border-primary)]/85"}
+            glowColor={plan.popular ? "rgba(16, 185, 129, 0.15)" : "rgba(148, 163, 184, 0.08)"}
           >
-            {tier.popular && (
+            {plan.badge && (
               <div className="absolute top-4 right-4 bg-emerald-500 text-slate-950 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">
-                Most Popular
+                {plan.badge}
               </div>
             )}
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-[var(--m-text-tertiary)] uppercase tracking-widest">{tier.name}</span>
-              <p className="text-xs text-[var(--m-text-tertiary)] min-h-[36px]">{tier.desc}</p>
-              
-              <div className="flex items-baseline gap-1 py-2">
-                <span className="text-4xl font-extrabold text-[var(--m-text-heading)]">${tier.price}</span>
-                <span className="text-xs text-[var(--m-text-muted)]">/ month</span>
+            <div className="space-y-6 flex flex-col justify-between h-full">
+              <div className="space-y-4">
+                <span className="text-xs font-bold text-[var(--m-text-tertiary)] uppercase tracking-widest">{plan.name}</span>
+                <h4 className="text-sm text-[var(--m-text-secondary)] font-semibold min-h-[20px]">{plan.tagline}</h4>
+                
+                <div className="flex items-baseline gap-1 py-2 border-y border-[var(--m-border-primary)]/50">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-[var(--m-text-heading)]">{plan.price}</span>
+                  <span className="text-xs text-[var(--m-text-muted)]">{plan.subtext}</span>
+                </div>
+                <div className="text-xs font-medium text-emerald-400/90">{plan.setupFee}</div>
               </div>
 
-              <ul className="space-y-3.5 border-t border-[var(--m-border-primary)] pt-4">
-                {tier.features.map((feat) => (
-                  <li key={feat} className="flex gap-2.5 items-start text-xs text-[var(--m-text-secondary)]">
-                    <Check className="size-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="pt-6">
-                <Link
-                  href="/login"
-                  className={`w-full py-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 ${
-                    tier.popular
-                      ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
-                      : "bg-[var(--m-bg-secondary)] border border-[var(--m-border-primary)] hover:bg-[var(--m-bg-tertiary)] text-[var(--m-text-secondary)]"
-                  }`}
-                >
-                  {tier.cta} <ArrowRight className="size-3.5" />
-                </Link>
+              <div className="space-y-4 pt-4">
+                {plan.ctaType === "link" ? (
+                  <Link
+                    href={plan.ctaLink || "#"}
+                    className="w-full py-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
+                  >
+                    {plan.ctaText}
+                  </Link>
+                ) : (
+                  <BookDemoTrigger className="w-full py-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-[var(--m-bg-secondary)] border border-[var(--m-border-primary)] hover:bg-[var(--m-bg-tertiary)] text-[var(--m-text-secondary)]">
+                    {plan.ctaText}
+                  </BookDemoTrigger>
+                )}
+                <div className="text-[10px] text-[var(--m-text-muted)] text-center leading-relaxed">{plan.footerText}</div>
               </div>
             </div>
           </SpotlightCard>
         ))}
       </div>
 
-      {/* ROI CALCULATOR SECTION */}
-      <div className="rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-8 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-cyan-950/5 pointer-events-none" />
-        <div className="max-w-3xl mx-auto space-y-8 relative z-10">
-          <div className="text-center space-y-2">
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[var(--m-text-primary)] flex items-center justify-center gap-2">
-              Calculate Your WhatsApp ROI <TrendingUp className="size-5 text-emerald-400" />
-            </h3>
-            <p className="text-xs text-[var(--m-text-tertiary)]">See how much labor cost and conversation value you recover with automation.</p>
-          </div>
+      <div className="text-center pt-4">
+        <p className="text-xs text-[var(--m-text-muted)] font-medium">*Pricing exclusive of GST</p>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pt-4">
-            {/* Input Sliders */}
-            <div className="space-y-6 bg-[var(--m-bg-secondary)]/30 border border-[var(--m-border-glass)]/60 p-6 rounded-xl">
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-[var(--m-text-tertiary)] font-medium">Shared Inbox Agents</span>
-                  <span className="text-[var(--m-text-heading)] font-bold">{agents} reps</span>
-                </div>
-                <input
-                  type="range"
-                  min="1"
-                  max="50"
-                  value={agents}
-                  onChange={(e) => setAgents(Number(e.target.value))}
-                  className="w-full accent-emerald-500 bg-[var(--m-bg-tertiary)] h-1.5 rounded-full outline-none"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-[var(--m-text-tertiary)] font-medium">Monthly Messages</span>
-                  <span className="text-[var(--m-text-heading)] font-bold">{volume.toLocaleString()} msgs</span>
-                </div>
-                <input
-                  type="range"
-                  min="5000"
-                  max="200000"
-                  step="5000"
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-full accent-emerald-500 bg-[var(--m-bg-tertiary)] h-1.5 rounded-full outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Calculations Output */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[var(--m-bg-primary)] border border-[var(--m-border-glass)] p-4 rounded-xl">
-                <span className="text-[10px] uppercase font-bold text-[var(--m-text-muted)]">Labor Saved / Mo</span>
-                <h4 className="text-xl sm:text-2xl font-extrabold text-emerald-500 mt-1">${savings.toLocaleString()}</h4>
-                <p className="text-[10px] text-[var(--m-text-muted)] mt-1">Based on {hoursSaved} automated response hours.</p>
-              </div>
-
-              <div className="bg-[var(--m-bg-primary)] border border-[var(--m-border-glass)] p-4 rounded-xl">
-                <span className="text-[10px] uppercase font-bold text-[var(--m-text-muted)]">Addtl Conversion / Mo</span>
-                <h4 className="text-xl sm:text-2xl font-extrabold text-cyan-400 mt-1">${conversionIncrease.toLocaleString()}</h4>
-                <p className="text-[10px] text-[var(--m-text-muted)] mt-1">Based on 1.5% lead recovery.</p>
-              </div>
-            </div>
-          </div>
+      {/* Feature Comparison Matrix */}
+      <div className="space-y-8 pt-8">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--m-text-heading)]">Compare Plan Features</h2>
+          <p className="text-xs text-[var(--m-text-tertiary)]">Detailed capability matrix across all setup tiers</p>
         </div>
+
+        <div className="overflow-x-auto rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/10 backdrop-blur-md">
+          <table className="w-full min-w-[600px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-[var(--m-border-primary)] bg-[var(--m-bg-secondary)]/40 text-[var(--m-text-secondary)] font-bold text-xs">
+                <th className="p-4 w-[40%]">All plans · per WABA/month</th>
+                <th className="p-4 text-center w-[20%]">Starter</th>
+                <th className="p-4 text-center w-[20%]">Growth</th>
+                <th className="p-4 text-center w-[20%]">Managed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(features).map(([key, section]) => (
+                <React.Fragment key={key}>
+                  <tr className="bg-[var(--m-bg-secondary)]/20 border-b border-[var(--m-border-primary)]">
+                    <td colSpan={4} className="px-4 py-3 text-xs uppercase font-extrabold tracking-wider text-emerald-400">
+                      {section.title}
+                    </td>
+                  </tr>
+                  {section.rows.map((row, rIdx) => (
+                    <tr 
+                      key={rIdx} 
+                      className="border-b border-[var(--m-border-primary)]/50 hover:bg-[var(--m-bg-secondary)]/15 transition-colors duration-150"
+                    >
+                      <td className="p-4 text-xs font-semibold text-[var(--m-text-secondary)]">{row.name}</td>
+                      <td className="p-4 text-center">{renderValue(row.starter)}</td>
+                      <td className="p-4 text-center">{renderValue(row.growth)}</td>
+                      <td className="p-4 text-center">{renderValue(row.managed)}</td>
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Footer Callout */}
+      <div className="text-center space-y-4">
+        <BookDemoTrigger className="inline-flex items-center gap-1 text-sm font-semibold transition-colors text-emerald-500 hover:text-emerald-400">
+          Not sure which plan? Talk to us →
+        </BookDemoTrigger>
       </div>
     </div>
   );

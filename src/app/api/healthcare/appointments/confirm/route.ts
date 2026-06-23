@@ -123,19 +123,19 @@ export async function POST(request: Request) {
     let sentMessageId = ''
     const sanitizedPhone = sanitizePhoneForMeta(appt.contact.phone)
 
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[Appointments Confirmation] Development Sandbox: Simulating success.')
-      sentMessageId = `sandbox-confirm-${Date.now()}`
-    } else {
-      try {
-        const result = await sendTextMessage({
-          phoneNumberId,
-          accessToken,
-          to: sanitizedPhone,
-          text: messageText,
-        })
-        sentMessageId = result.messageId
-      } catch (err: any) {
+    try {
+      const result = await sendTextMessage({
+        phoneNumberId,
+        accessToken,
+        to: sanitizedPhone,
+        text: messageText,
+      })
+      sentMessageId = result.messageId
+    } catch (err: any) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`[Appointments Confirmation] Dev mode error fallback: ${err.message || err}. Simulating success.`)
+        sentMessageId = `sandbox-confirm-${Date.now()}`
+      } else {
         console.error('[Appointments Confirmation] Meta API call failed:', err)
         return NextResponse.json(
           { error: `Meta API failed: ${err.message || err}` },

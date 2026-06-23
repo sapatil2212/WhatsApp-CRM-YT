@@ -14,12 +14,12 @@ export default function SecurityPage() {
     {
       title: "End-to-End Encryption",
       desc: "Data in transit is encrypted using TLS 1.3, and data at rest utilizes standard AES-256 block formats.",
-      icon: <Lock className="size-4 text-cyan-400" />,
+      icon: <Lock className="size-4 text-teal-400" />,
     },
     {
       title: "Uptime Auditing",
       desc: "Real-time audit log feeds register every API key update, webhook dispatch, and user console entry.",
-      icon: <FileText className="size-4 text-purple-400" />,
+      icon: <FileText className="size-4 text-emerald-400" />,
     },
   ];
 
@@ -32,7 +32,7 @@ export default function SecurityPage() {
         </div>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--m-text-heading)] tracking-tight leading-[1.1]">
           Trust & Compliance <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             Built from Day One.
           </span>
         </h1>
@@ -56,7 +56,7 @@ export default function SecurityPage() {
 
       {/* Security Policies block */}
       <div className="rounded-2xl border border-[var(--m-border-primary)] bg-[var(--m-bg-card)] p-8 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-cyan-950/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 to-teal-950/5 pointer-events-none" />
         <div className="max-w-2xl mx-auto space-y-6 relative z-10 text-center">
           <h3 className="text-xl sm:text-2xl font-extrabold text-[var(--m-text-primary)]">Need our Security Whitepaper?</h3>
           <p className="text-xs text-[var(--m-text-tertiary)] leading-relaxed max-w-md mx-auto">

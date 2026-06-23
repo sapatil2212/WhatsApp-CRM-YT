@@ -16,9 +16,23 @@ import {
   type ThemeId,
 } from "@/lib/themes";
 
+// Suppress the false-positive React 19 console warning about the inline theme-boot script
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  const origError = console.error;
+  console.error = (...args: any[]) => {
+    if (
+      typeof args[0] === "string" &&
+      args[0].includes("Encountered a script tag while rendering React component")
+    ) {
+      return;
+    }
+    origError.apply(console, args);
+  };
+}
+
 export type ThemeMode = "light" | "dark";
 
-const MODE_STORAGE_KEY = "wacrm.mtheme";
+const MODE_STORAGE_KEY = "chatnexgenai.mtheme";
 
 interface ThemeContextValue {
   theme: ThemeId;
@@ -62,6 +76,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const fromAttr = document.documentElement.getAttribute("data-mtheme") as ThemeMode;
         if (fromAttr === "light" || fromAttr === "dark") {
           setModeState(fromAttr);
+          if (fromAttr === "light") {
+            document.documentElement.classList.remove("dark");
+          } else {
+            document.documentElement.classList.add("dark");
+          }
+        } else {
+          document.documentElement.classList.add("dark");
         }
       }
     } catch {
